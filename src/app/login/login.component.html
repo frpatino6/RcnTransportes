@@ -1,0 +1,44 @@
+<FlexboxLayout class="page">
+    <StackLayout class="form">
+        <Image class="logo" src="~/app/images/rcn-tevision.png"></Image>
+        <GridLayout rows="auto, auto, auto">
+            <StackLayout row="0" class="input-field">
+                <TextField class="input" hint="Nombre usuario" [isEnabled]="!processing" keyboardType="email"
+                    autocorrect="false" autocapitalizationType="none" [(ngModel)]="user.email" returnKeyType="next"
+                    (returnPress)="focusPassword()"></TextField>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+
+            <StackLayout row="1" class="input-field">
+                <TextField #password class="input" [isEnabled]="!processing" hint="Contraseña" secure="true"
+                    [(ngModel)]="user.password" [returnKeyType]="isLoggingIn ? 'done' : 'next'"
+                    (returnPress)="focusConfirmPassword()"></TextField>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+
+            <StackLayout row="2" *ngIf="!isLoggingIn" class="input-field">
+                <TextField #confirmPassword class="input" [isEnabled]="!processing" hint="Confirm password"
+                    secure="true" [(ngModel)]="user.confirmPassword" returnKeyType="done"></TextField>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+            
+        </GridLayout>
+        <Button [text]="isLoggingIn ? 'Ingresar' : 'Sign Up'" [isEnabled]="!processing" (tap)="submit()"
+            class="action-button-solpe"></Button>
+    </StackLayout>
+    <Label (tap)="toggleForm()">
+        <FormattedString>
+            <Span [text]="isLoggingIn ? '© RCN Televisión' : ''" class=""></Span>
+        </FormattedString>
+    </Label>
+    <Label (tap)="toggleForm()">
+        <FormattedString>
+            <Span [text]="isLoggingIn ? 'Power by GTI - D&IT' : ''" class=""></Span>
+        </FormattedString>
+    </Label>
+    <Label (tap)="toggleForm()">
+        <FormattedString>
+            <Span [text]="isLoggingIn ? 'Version 0.1.0' : ''" class=""></Span>
+        </FormattedString>
+    </Label>
+</FlexboxLayout>

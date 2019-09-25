@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "179470215234",
+    "firebase_url": "https://rcnpat-521ae.firebaseio.com",
+    "project_id": "rcnpat-521ae",
+    "storage_bucket": "rcnpat-521ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179470215234:android:364c7af87efa787398a5db",
+        "android_client_info": {
+          "package_name": "com.rcn.pat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179470215234-uoguun0jmfbo0espoppv9o8ua20bgv7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVmmkIt0x3ghpcck0J1nygTF1rWTPJFfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "179470215234-uoguun0jmfbo0espoppv9o8ua20bgv7c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
