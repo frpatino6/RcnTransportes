@@ -30,8 +30,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _token: String;
   private isLoggingIn = true;
   private user: User;
-  @ViewChild("password",{static: false}) password: ElementRef;
-  @ViewChild("confirmPassword",{static: false}) confirmPassword: ElementRef;
+  @ViewChild("password",{static: true}) password: ElementRef;
+  @ViewChild("confirmPassword",{static: true}) confirmPassword: ElementRef;
 
   constructor(private page: Page, private userService: UserService, private router: Router,
     private activeRoute: ActivatedRoute,
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {   
-    this.user.accessToken = this._token
+    /*this.user.accessToken = this._token
     indicator.show({
       message: 'Verificando credenciales...',
       dimBackground: true,
@@ -100,12 +100,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         let navigationExtras = {
           queryParams: { 'email': this.user.email }
         }
-        this.routerExtensions.navigate(["/home"], navigationExtras);
+        this.routerExtensions.navigate(["/listServices"], navigationExtras);
         indicator.hide();
       }, (error) => {              
         indicator.hide();
         this.showMessageDialog(error.message)
-      });
+      });*/
+      let navigationExtras = {
+        queryParams: { 'email': this.user.email }
+      }
+      this.routerExtensions.navigate(["/listServices"], navigationExtras);
   }
 
   register() {

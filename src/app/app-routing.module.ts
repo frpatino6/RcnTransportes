@@ -4,14 +4,16 @@ import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { BackendService } from "./shared/services/backendService";
 import { LoginComponent } from "./login/login.component";
 
+
 const routes: Routes = [
-    { path: "", redirectTo: BackendService.isUserLoggedIn() ? "/home" : "/login", pathMatch: "full" },
+    { path: "", redirectTo: BackendService.isUserLoggedIn() ? "/listServices" : "/login", pathMatch: "full" },
     { path: "login", component: LoginComponent },
-    { path: "home", loadChildren: () => import("~/app/home/home.module").then((m) => m.HomeModule) }
+    { path: "listServices", loadChildren: () => import("~/app/list-services-driver/list-services-driver.module").then((m) => m.ListServicesDriverModule) }
 ];
 
 @NgModule({
     imports: [NativeScriptRouterModule.forRoot(routes)],
-    exports: [NativeScriptRouterModule]
+    exports: [NativeScriptRouterModule],
+    declarations: []
 })
 export class AppRoutingModule { }

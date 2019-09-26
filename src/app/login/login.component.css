@@ -15,8 +15,7 @@
   font-weight: bold;
   
 }
-.header {
-  horizontal-align: center;
+.header { 
   font-size: 25;
   font-weight: 600;
   margin-bottom: 70;
@@ -28,8 +27,7 @@
   margin-bottom: 25;
 }
 .input {
-  font-size: 18;
-  placeholder-color: #A8A8A8;
+  font-size: 18;  
 }
 .input:disabled {
   background-color: white;
