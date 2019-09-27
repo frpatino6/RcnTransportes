@@ -7,5 +7,11 @@
   "devDependencies": {
     "@nativescript/schematics": "^0.7.1",
     "@schematics/angular": "^8.3.6"
+  },
+  "dependencies": {
+    "nativescript-statusbar": "^5.0.0",
+    "rxjs": "^6.5.3",
+    "rxjs-compat": "^6.5.3",
+    "rxjs-observable": "0.0.7"
   }
 }

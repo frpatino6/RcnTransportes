@@ -1,6 +1,10 @@
 <FlexboxLayout class="page">
+  
+    <Image  class="logo" src="~/app/images/rcn-tevision.png" >
+    </Image>
+    <Label row="1" col="0" text="App para conductores" class="lable-title-app"></Label>
+
     <StackLayout class="form">
-        <Image class="logo" src="~/app/images/rcn-tevision.png"></Image>
         <GridLayout rows="auto, auto, auto">
             <StackLayout row="0" class="input-field">
                 <TextField class="input" hint="Nombre usuario" [isEnabled]="!processing" keyboardType="email"
@@ -21,7 +25,7 @@
                     secure="true" [(ngModel)]="user.confirmPassword" returnKeyType="done"></TextField>
                 <StackLayout class="hr-light"></StackLayout>
             </StackLayout>
-            
+
         </GridLayout>
         <Button [text]="isLoggingIn ? 'Ingresar' : 'Sign Up'" [isEnabled]="!processing" (tap)="submit()"
             class="action-button-solpe"></Button>

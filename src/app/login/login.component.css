@@ -10,7 +10,7 @@
 
 .logo {
   margin-top: 40;
-  margin-bottom: 80;
+  margin-bottom: 10;
   height: 90;
   font-weight: bold;
   
@@ -44,4 +44,9 @@
 }
 .bold {
   color: #000000; 
+}
+.lable-title-app{
+  margin-bottom: 70;
+  font-size: 30;
+  font-family:'Varela' 
 }

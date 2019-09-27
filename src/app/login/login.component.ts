@@ -30,17 +30,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _token: String;
   private isLoggingIn = true;
   private user: User;
-  @ViewChild("password",{static: true}) password: ElementRef;
-  @ViewChild("confirmPassword",{static: true}) confirmPassword: ElementRef;
+  @ViewChild("password", { static: true }) password: ElementRef;
+  @ViewChild("confirmPassword", { static: true }) confirmPassword: ElementRef;
 
   constructor(private page: Page, private userService: UserService, private router: Router,
     private activeRoute: ActivatedRoute,
     private routerExtensions: RouterExtensions) {
     this.page.actionBarHidden = true;
     this.user = new User();
-  
-    this.user.email = ""; 
-    this.user.password = ""; 
+
+    this.user.email = "frodriguezp";
+    this.user.password = "bogota1*";
   }
 
   ngOnInit(): void {
@@ -74,6 +74,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   submit() {
     if (!this.user.email || !this.user.password) {
       this.message = "Please provide both an email address and password.";
+      this.showMessageDialog("Ingrese el nombre de usuario y contraseña.");
+      
       return;
     }
 
@@ -84,7 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  login() {   
+  login() {
     /*this.user.accessToken = this._token
     indicator.show({
       message: 'Verificando credenciales...',
@@ -106,10 +108,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         indicator.hide();
         this.showMessageDialog(error.message)
       });*/
-      let navigationExtras = {
-        queryParams: { 'email': this.user.email }
-      }
-      this.routerExtensions.navigate(["/listServices"], navigationExtras);
+    let navigationExtras = {
+      queryParams: { 'email': this.user.email }
+    }
+    this.routerExtensions.navigate(["/listServices"], navigationExtras);
   }
 
   register() {
@@ -171,11 +173,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   showMessageDialog(message) {
     var dialogs = require("tns-core-modules/ui/dialogs");
     dialogs.alert({
-        title: "Solpe",
-        message: message,
-        okButtonText: "Aceptar"
+      title: "Solpe",
+      message: message,
+      okButtonText: "Aceptar"
     }).then(function () {
-        console.log("Dialog closed!");
+      console.log("Dialog closed!");
     });
   }
 }
