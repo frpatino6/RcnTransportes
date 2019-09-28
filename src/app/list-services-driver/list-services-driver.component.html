@@ -22,37 +22,39 @@
                     <Label text="john.alxndr@gmail.com" class="profile__email"></Label>
                 </StackLayout>
             </GridLayout>
-            <ScrollView backgroundColor="#e8e7e7">
-                <FlexboxLayout flexDirection="column" class="owe-list" backgroundColor="#e8e7e7">
-                    <StackLayout id="item1" orientation="vertical" *ngFor="let item of dataDrivers" class="owe-list-item" width="100%"
-                        (tap)="onNavigate()">
-                        <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto"
-                            class="owe-secondary-info">
-                            <Label row="0" col="0" [text]="item.date" class="time-information"></Label>
-                            <GridLayout row="0" col="2" columns="auto, auto, auto" rows="auto">
-                                <Label row="0" col="0" [text]="item.time" class="lender-name"></Label>
-                            </GridLayout>
-                        </GridLayout>
-                        <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto"
-                            class="owe-secondary-info">
-                            <GridLayout row="0" col="2" columns="auto, auto, auto" rows="auto">
-                                <GridLayout row="0" col="2" columns="auto,auto,auto,auto" rows="auto" width="100%"
-                                    class="debtor-list">
-                                    <StackLayout row="0" col="0" orientation="vertical" class="debtor-list-item">
-                                        <Image src="~/app/images/category-filter.png" class="debtor-list-item-image">
-                                        </Image>
-                                    </StackLayout>
-                                    <StackLayout row="0" col="1" orientation="vertical" class="debtor-list-item">
-                                        <Image src="~/Assets/yura.png" class="debtor-list-item-image"></Image>
-                                    </StackLayout>
-
+            <FlexboxLayout flexDirection="column" class="owe-list" backgroundColor="#e8e7e7">
+                <PullToRefresh (refresh)="refreshList($event)">
+                    <ListView [items]="dataDrivers">
+                        <ng-template let-item="item" nsTemplateKey="transaction">
+                            <StackLayout id="item1" orientation="vertical" class="owe-list-item" width="100%"
+                                (tap)="onNavigate()">
+                                <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto"
+                                    class="owe-secondary-info">
+                                    <Label row="0" col="0" [text]="item.date" class="date-information"></Label>
+                                    <GridLayout row="0" col="2" columns="auto, auto, auto" rows="auto">
+                                        <Label row="0" col="0" [text]="item.time" class="lender-name"></Label>
+                                    </GridLayout>
                                 </GridLayout>
-                            </GridLayout>
-                        </GridLayout>
-                        <Label class="divider" text=""></Label>
-                    </StackLayout>
-                </FlexboxLayout>
-            </ScrollView>
-        </StackLayout>
+                                <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto"
+                                    class="owe-secondary-info">
+                                    <GridLayout row="0" col="2" columns="auto, auto, auto" rows="auto">
+                                        <GridLayout row="0" col="1" columns="auto,auto,auto,auto" rows="auto"
+                                            width="100%" class="debtor-list" (tap)="onClickDetail(item.id)">
+                                            <StackLayout row="0" col="0" orientation="vertical"
+                                                class="debtor-list-item">
+                                                <Image src="~/app/images/ic_getList.png"
+                                                    class="debtor-list-item-image">
+                                                </Image>
+                                            </StackLayout>                                        
+                                        </GridLayout>
+                                    </GridLayout>
+                                </GridLayout>
+                                <Label class="divider" text=""></Label>
+                            </StackLayout>
+                        </ng-template>
+                    </ListView>
+                </PullToRefresh>
+            </FlexboxLayout>
+        </StackLayout>        
     </AbsoluteLayout>
 </RadSideDrawer>

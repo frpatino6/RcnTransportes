@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from "@angular/core";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { Page } from "tns-core-modules/ui/page";
+import { Page, EventData } from "tns-core-modules/ui/page";
 import { RouterExtensions } from "nativescript-angular/router";
 import { User } from "../shared/model/user.model";
 import { UserService } from "../shared/services/user.service";
@@ -28,8 +28,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   private _message: string;
   private _token: String;
-  private isLoggingIn = true;
-  private user: User;
+  public isLoggingIn = true;
+  public user: User;
   @ViewChild("password", { static: true }) password: ElementRef;
   @ViewChild("confirmPassword", { static: true }) confirmPassword: ElementRef;
 
@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (!this.user.email || !this.user.password) {
       this.message = "Please provide both an email address and password.";
       this.showMessageDialog("Ingrese el nombre de usuario y contraseña.");
-      
+
       return;
     }
 
@@ -171,7 +171,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
   showMessageDialog(message) {
-    var dialogs = require("tns-core-modules/ui/dialogs");
+    let dialogs = require("tns-core-modules/ui/dialogs");
     dialogs.alert({
       title: "Solpe",
       message: message,
@@ -179,6 +179,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     }).then(function () {
       console.log("Dialog closed!");
     });
+  }
+
+  onBlur($event: EventData) {
+    console.log('on blur', $event.eventName);
+  }
+
+  returnPress($event: EventData) {
+    console.log('returnPress', $event.eventName);
+  }
+
+  onTextChange($event: EventData) {
+    console.log('onTextChange', $event.eventName);
+  }
+
+  onFocus($event: EventData) {
+    console.log('onFocus', $event.eventName);
   }
 }
 

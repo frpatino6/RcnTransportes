@@ -193,7 +193,11 @@ html {
     margin-top: 5;
     font-size: 20;
 }
-
+.date-information{
+    color: #ec4758;
+    margin-top: 5;
+    font-size: 18;
+}
 .debtor-list {
     margin-left: 5;
     margin-right: 10;

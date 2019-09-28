@@ -7,19 +7,19 @@ import { Observable, Subscriber } from 'rxjs';
 
 // import { Kinvey } from "kinvey-nativescript-sdk";
 import { User } from "../model/user.model";
-import { Drivers } from "../model/drivers.model";
+import { DriversServices } from "../model/drivers.model";
 import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 
 @Injectable()
 export class ListServicesByDriver {
     constructor(private http: HttpClient) { }
-    public dataDrivers: Drivers[] = new Array();
+    public dataDrivers: DriversServices[] = new Array();
     //private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
     private serverUrl = "http://192.168.0.12/solpe/login/ValidateUser/";
-    
-    public getListServicesByDriver(driverId: Number): Observable<Drivers[]>  {
+
+    public getListServicesByDriver(driverId: Number): Observable<DriversServices[]> {
         let headers = this.createRequestHeader();
-        this.dataDrivers=[];
+        this.dataDrivers = [];
         console.log(this.serverUrl + driverId);
         this.populateListDrivers();
         return Observable.create((observer: Subscriber<any>) => {
@@ -41,35 +41,40 @@ export class ListServicesByDriver {
         return headers;
     }
     populateListDrivers() {
-        let item1: Drivers = new Drivers();
+        let item1: DriversServices = new DriversServices();
+        item1.id = 1548777;
         item1.date = "24/09/2019";
         item1.time = "08:00:00";
         item1.phone = "31547895414";
         item1.phone = "John Alexander";
         this.dataDrivers.push(item1);
 
-        let item2: Drivers = new Drivers();
+        let item2: DriversServices = new DriversServices();
+        item2.id = 354874;
         item2.date = "25/09/2019";
         item2.time = "15:00:00";
         item2.phone = "31547895414";
         item2.phone = "John Alexander";
         this.dataDrivers.push(item2);
 
-        let item3: Drivers = new Drivers();
+        let item3: DriversServices = new DriversServices();
+        item3.id = 584111;
         item3.date = "25/09/2019";
         item3.time = "20:00:00";
         item3.phone = "31547895414";
         item3.phone = "John Alexander";
         this.dataDrivers.push(item3);
 
-        let item4: Drivers = new Drivers();
+        let item4: DriversServices = new DriversServices();
+        item4.id = 135478;
         item4.date = "26/09/2019";
         item4.time = "06:00:00";
         item4.phone = "31547895414";
         item4.phone = "John Alexander";
         this.dataDrivers.push(item4);
 
-        let item5: Drivers = new Drivers();
+        let item5: DriversServices = new DriversServices();
+        item5.id = 145888;
         item5.date = "27/09/2019";
         item5.time = "09:00:00";
         item5.phone = "31547895414";
