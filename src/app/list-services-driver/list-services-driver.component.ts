@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DriversServices } from '../shared/model/drivers.model';
 import { ListServicesByDriver } from '../shared/services/listServicesByDriver.services';
 import { registerElement } from "nativescript-angular/element-registry";
+import { RouterExtensions } from 'nativescript-angular/router';
 registerElement("PullToRefresh", () => require("@nstudio/nativescript-pulltorefresh").PullToRefresh);
 
 @Component({
@@ -13,7 +14,7 @@ export class ListServicesDriverComponent implements OnInit {
   public dataDrivers: DriversServices[] = new Array();
   public pullRefresh ;
 
-  constructor(private listServices: ListServicesByDriver) {
+  constructor(private listServices: ListServicesByDriver,private routerExtensions: RouterExtensions) {
 
   }
 
@@ -35,13 +36,13 @@ export class ListServicesDriverComponent implements OnInit {
         this.dataDrivers = result;
         this.pullRefresh.refreshing = false;
       }, (error) => {
-
+        this.showMessageDialog(error.err)
       });
   }
   showMessageDialog(message) {
     let dialogs = require("tns-core-modules/ui/dialogs");
     dialogs.alert({
-      title: "Solpe",
+      title: "PAT",
       message: message,
       okButtonText: "Aceptar"
     }).then(function () {
@@ -49,6 +50,10 @@ export class ListServicesDriverComponent implements OnInit {
     });
   }
   onClickDetail(idServices) {
-    this.showMessageDialog(String(idServices));
+    // this.showMessageDialog(String(idServices));
+    let navigationExtras = {
+      queryParams: { 'idService': idServices }
+    }
+    this.routerExtensions.navigate(["/detailServices"],navigationExtras);
   }
 }

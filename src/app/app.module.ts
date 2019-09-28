@@ -7,7 +7,6 @@ import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login/login.component";
 import { UserService } from "./shared/services/user.service";
 
-
 @NgModule({
     bootstrap: [
         AppComponent
@@ -20,7 +19,8 @@ import { UserService } from "./shared/services/user.service";
     ],
     declarations: [
         AppComponent,
-        LoginComponent
+        LoginComponent,
+        
     ],
     providers: [
         UserService

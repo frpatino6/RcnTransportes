@@ -8,12 +8,9 @@
 <RadSideDrawer>
     <AbsoluteLayout tkMainContent width="100%" height="100%" backgroundColor="#e8e7e7">
         <StackLayout top="0" left="0" width="100%" height="100%">
-            <GridLayout columns="auto, auto , auto" row="auto" width="100%" height="auto" class="profile-container"
-                verticalAlignment="middle">
-                <Image col="0" row="0" height="30" width="30" (tap)="openDrawer()" src="~/Assets/drawer-icon.png"
-                    class="m-10 p-10 drawer-icon"></Image>
-                <StackLayout row="0" col="1" orientation="vertical" width="50" height="50"
-                    class="profile-photo-container">
+            <GridLayout columns="auto, auto , auto" row="auto" width="100%" height="auto" class="profile-container" verticalAlignment="middle">
+                <Image col="0" row="0" height="30" width="30" class="m-10 p-10 drawer-icon"></Image>
+                <StackLayout row="0" col="1" orientation="vertical" width="50" height="50" class="profile-photo-container">
                     <Image src="~/app/Assets/user_logo.png" class="profile__photo"></Image>
                 </StackLayout>
                 <StackLayout row="0" col="2" height="80" orientation="vertical" class="profile-information-container">
@@ -26,26 +23,20 @@
                 <PullToRefresh (refresh)="refreshList($event)">
                     <ListView [items]="dataDrivers">
                         <ng-template let-item="item" nsTemplateKey="transaction">
-                            <StackLayout id="item1" orientation="vertical" class="owe-list-item" width="100%"
-                                (tap)="onNavigate()">
-                                <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto"
-                                    class="owe-secondary-info">
+                            <StackLayout id="item1" orientation="vertical" class="owe-list-item" width="100%">
+                                <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto" class="owe-secondary-info">
                                     <Label row="0" col="0" [text]="item.date" class="date-information"></Label>
                                     <GridLayout row="0" col="2" columns="auto, auto, auto" rows="auto">
                                         <Label row="0" col="0" [text]="item.time" class="lender-name"></Label>
                                     </GridLayout>
                                 </GridLayout>
-                                <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto"
-                                    class="owe-secondary-info">
+                                <GridLayout columns="auto, *, auto" rows="auto" width="100%" height="auto" class="owe-secondary-info">
                                     <GridLayout row="0" col="2" columns="auto, auto, auto" rows="auto">
-                                        <GridLayout row="0" col="1" columns="auto,auto,auto,auto" rows="auto"
-                                            width="100%" class="debtor-list" (tap)="onClickDetail(item.id)">
-                                            <StackLayout row="0" col="0" orientation="vertical"
-                                                class="debtor-list-item">
-                                                <Image src="~/app/images/ic_getList.png"
-                                                    class="debtor-list-item-image">
+                                        <GridLayout row="0" col="1" columns="auto,auto,auto,auto" rows="auto" width="100%" class="debtor-list" (tap)="onClickDetail(item.id)">
+                                            <StackLayout row="0" col="0" orientation="vertical" class="debtor-list-item">
+                                                <Image src="~/app/images/ic_getList.png" class="debtor-list-item-image">
                                                 </Image>
-                                            </StackLayout>                                        
+                                            </StackLayout>
                                         </GridLayout>
                                     </GridLayout>
                                 </GridLayout>
@@ -55,6 +46,6 @@
                     </ListView>
                 </PullToRefresh>
             </FlexboxLayout>
-        </StackLayout>        
+        </StackLayout>
     </AbsoluteLayout>
 </RadSideDrawer>

@@ -8,7 +8,8 @@ import { LoginComponent } from "./login/login.component";
 const routes: Routes = [
     { path: "", redirectTo: BackendService.isUserLoggedIn() ? "/listServices" : "/login", pathMatch: "full" },
     { path: "login", component: LoginComponent },
-    { path: "listServices", loadChildren: () => import("~/app/list-services-driver/list-services-driver.module").then((m) => m.ListServicesDriverModule) }
+    { path: "listServices", loadChildren: () => import("~/app/list-services-driver/list-services-driver.module").then((m) => m.ListServicesDriverModule) },
+    { path: "detailServices", loadChildren: () => import("~/app/detail-driver-service/detail-driver-service.module").then((m) => m.DetailDriverServiceModule) }
 ];
 
 @NgModule({
