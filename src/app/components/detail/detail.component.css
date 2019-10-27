@@ -1,0 +1,27 @@
+/* Add mobile styles for the component here.  */
+
+.detail_service_driver {
+    padding: 10px;
+    margin-top: 50px;
+}
+
+.label-detail {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-bottom: 30px;
+}
+
+.label_name {
+    font-size: 17px;
+}
+
+.label-date {
+    font-size: 16px;
+}
+
+.buttonActions {
+    font-size: 35px;
+    border: none;
+    background-color: transparent;
+    outline: none;
+}

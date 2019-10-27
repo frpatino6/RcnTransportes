@@ -5,20 +5,24 @@
 //	implementation 'com.android.support:recyclerview-v7:+'
 //}
 
-// If you want to add something to be applied before applying plugins' include.gradle files
+// If you want to add something to be applied before applying plugins' include.gradle files 
 // e.g. project.ext.googlePlayServicesVersion = "15.0.1"
 // create a file named before-plugins.gradle in the current directory and place it there
 
-android {
-  defaultConfig {
-    minSdkVersion 17
+android {  
+   flavorDimensions "version"
+  defaultConfig {  
     generatedDensities = []
-  }
-  aaptOptions {
-    additionalParameters "--no-version-vectors"
-  }
+         applicationId = "com.rcn.pat"  
+            multiDexEnabled true
+  }    
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }  
    project.ext {
      googlePlayServicesVersion = "15.0.0"
       firebaseMessagingVersion = "+" // OR the version you wish
    }
-}
+} 
+
+apply plugin: 'com.google.gms.google-services'

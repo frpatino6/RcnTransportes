@@ -2,14 +2,14 @@ import { NgModule } from "@angular/core";
 import { Routes } from "@angular/router";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 
-import { ListServicesDriverComponent } from "./list-services-driver.component";
+import { DetailDriverServiceComponent  } from "./detail.component"
 
 const routes: Routes = [
-    { path: "", component: ListServicesDriverComponent }
+    { path: "", component: DetailDriverServiceComponent }
 ];
 
 @NgModule({
     imports: [NativeScriptRouterModule.forChild(routes)],
     exports: [NativeScriptRouterModule]
 })
-export class ListServicesDriverRoutingModule { }
+export class DetailDriverRoutingModule { }

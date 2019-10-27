@@ -1,10 +1,8 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { NativeScriptCommonModule } from 'nativescript-angular/common';
-import { DetailDriverServiceService } from '../shared/services/detail-driver-service.service';
-import { DetailDriverServiceComponent } from './detail-driver-service.component';
-import { DetailDriverRoutingModule } from './detail-driver-service.routing.module';
-
-
+import { DetailDriverServiceService } from '../../shared/services/detail-driver-service.service';
+import { DetailDriverServiceComponent } from './detail.component';
+import { DetailDriverRoutingModule } from './detail.routing.module';
 
 @NgModule({
   declarations: [DetailDriverServiceComponent],
