@@ -3,13 +3,10 @@ import { ListServicesByDriver } from "../../shared/services/list-services-driver
 import { registerElement } from "nativescript-angular/element-registry";
 import { RouterExtensions } from "nativescript-angular/router";
 import { ActivatedRoute } from "@angular/router";
-import { Shedule } from '../../shared/model/shedule';
-registerElement(
-    "PullToRefresh",
-    () => {
-        return require("@nstudio/nativescript-pulltorefresh").PullToRefresh;
-    }
-);
+import { Shedule } from "../../shared/model/shedule";
+registerElement("PullToRefresh", () => {
+    return require("@nstudio/nativescript-pulltorefresh").PullToRefresh;
+});
 
 @Component({
     selector: "ns-list-services-driver",
@@ -19,17 +16,17 @@ registerElement(
 export class ListServicesDriverComponent implements OnInit {
     public dataDrivers: Shedule[] = new Array();
     public pullRefresh;
-    public docNumber:String;
+    public docNumber: String;
 
-    constructor(private route: ActivatedRoute,
+    constructor(
+        private route: ActivatedRoute,
         private listServices: ListServicesByDriver,
-    
+
         private routerExtensions: RouterExtensions
     ) {
         this.route.queryParams.subscribe(params => {
             this.docNumber = params["numDocumento"];
-            console.log( "Parametros: " + params["numDocumento"])
-
+            console.log("Parametros: " + params["numDocumento"]);
         });
     }
 
@@ -47,7 +44,7 @@ export class ListServicesDriverComponent implements OnInit {
             result => {
                 this.dataDrivers = result;
                 this.pullRefresh.refreshing = false;
-                console.log(result)
+                console.log(result);
             },
             error => {
                 this.showMessageDialog(error.err);
@@ -67,8 +64,8 @@ export class ListServicesDriverComponent implements OnInit {
             });
     }
     onClickDetail(selectedService) {
-        console.log(JSON.stringify(selectedService))
-        let navigationExtras = {            
+        console.log(JSON.stringify(selectedService));
+        let navigationExtras = {
             queryParams: { selectedService: JSON.stringify(selectedService) }
         };
         this.routerExtensions.navigate(["/detailServices"], navigationExtras);

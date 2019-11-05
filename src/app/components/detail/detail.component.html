@@ -5,7 +5,7 @@
 </Page.actionBar>
 <RadSideDrawer>
     <GridLayout columns="*" rows="2*,*" width="100%" height="100%">
-        <GridLayout row="0" col="0" columns="auto,*" rows="auto,auto,auto,auto,auto" width="100%" height="100%" class="detail_service_driver">
+        <GridLayout row="0" col="0" columns="auto,*" rows="auto,auto,auto,auto,auto,auto" width="100%" height="100%" class="detail_service_driver">
             <Label row="0" col="0" class="label-detail far" style="font-size: 30em; " text="&#xf007;"></Label>
             <Label row="0" col="1" horizontalAlignment="left" text="{{driversServices.nombreUsuarioSolicitante}}" class="label_name"></Label>
             <Label row="1" col="0" class="label-detail fas" style="font-size: 30em; " text="&#xf879;"></Label>
@@ -16,16 +16,17 @@
             <Label row="3" col="1" text="{{driversServices.descripcionRecorrido}}" class="label-date" textWrap="true" verticalAlignment="top"></Label>
             <Label row="4" col="0" class="label-detail far" style="font-size: 30em; " text="&#xf249;"></Label>
             <Label row="4" col="1" text="{{driversServices.observaciones}}" class="label-date" textWrap="true" verticalAlignment="top"></Label>
+            <Label row="5" col="1" text="{{lat}}" class="label-date" textWrap="true" verticalAlignment="top"></Label>
         </GridLayout>
         <GridLayout row="1" col="0" columns="*,*,*" rows="auto" width="100%" height="100%">
             <StackLayout row="0" col="0" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
                 <Label *ngIf="showPause" text="&#xf28b;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em;"></Label>
             </StackLayout>
             <StackLayout row="0" col="1" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
-                <Label *ngIf="showPlay" text="&#xf144;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="onClickInitServices()"></Label>
+                <Label *ngIf="showPlay" text="&#xf144;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="showConfirmAction()"></Label>
             </StackLayout>
             <StackLayout row="0" col="2" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
-                <Label *ngIf="showStop" text="&#xf28d;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; "></Label>
+                <Label *ngIf="showStop" text="&#xf28d;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="stopBackgroundTap()"></Label>
             </StackLayout>
         </GridLayout>
     </GridLayout>
