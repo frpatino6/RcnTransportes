@@ -31,15 +31,15 @@ export class ListServicesDriverComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getListSerrvicesByDriver(1);
+        this.getListSerrvicesByDriver();
     }
 
     refreshList(args) {
         this.pullRefresh = args.object;
-        this.getListSerrvicesByDriver(1);
+        this.getListSerrvicesByDriver();
     }
 
-    getListSerrvicesByDriver(driverId) {
+    getListSerrvicesByDriver() {
         this.listServices.getListServicesByDriver(this.docNumber).subscribe(
             result => {
                 this.dataDrivers = result;
@@ -64,7 +64,7 @@ export class ListServicesDriverComponent implements OnInit {
             });
     }
     onClickDetail(selectedService) {
-        console.log(JSON.stringify(selectedService));
+        console.log(`id servicio ${JSON.stringify(selectedService.id)}`);
         let navigationExtras = {
             queryParams: { selectedService: JSON.stringify(selectedService) }
         };

@@ -14,28 +14,50 @@ function _clearWatch() {
 }
 
 function _startWatch() {
-    geolocation.enableLocationRequest().then(function () {
-        _clearWatch();
-        watchId = geolocation.watchLocation(
-            function (loc) {
-                if (loc) {
-                    let toast = Toast.makeText('Background Location: \n' + loc.latitude + ', ' + loc.longitude);
-                    toast.show();
-                    console.log('Background Location: ' + loc.latitude + ' ' + loc.longitude);
+    geolocation.enableLocationRequest().then(
+        function() {
+            _clearWatch();
+            watchId = geolocation.watchLocation(
+                function(loc) {
+                    if (loc) {
+                        let toast = Toast.makeText(
+                            "Background Location: \n" +
+                                loc.latitude +
+                                ", " +
+                                loc.longitude
+                        );
+                        toast.show();
+                        console.log(
+                            "Background Location: " +
+                                loc.latitude +
+                                " " +
+                                loc.longitude
+                        );
+                        console.log(
+                            "Velocity : " +
+                                loc.speed
+                        );
+                    }
+                },
+                function(e) {
+                    console.log(
+                        "Background watchLocation error: " + (e.message || e)
+                    );
+                },
+                {
+                    desiredAccuracy: Accuracy.high,
+                    updateDistance: 1.0,
+                    updateTime: 3000,
+                    minimumUpdateTime: 100
                 }
-            },
-            function (e) {
-                console.log("Background watchLocation error: " + (e.message || e));
-            },
-            {
-                desiredAccuracy: Accuracy.high,
-                updateDistance: 1.0,
-                updateTime: 3000,
-                minimumUpdateTime: 100
-            });
-    }, function (e) {
-        console.log("Background enableLocationRequest error: " + (e.message || e));
-    });
+            );
+        },
+        function(e) {
+            console.log(
+                "Background enableLocationRequest error: " + (e.message || e)
+            );
+        }
+    );
 }
 application.on(application.exitEvent, _clearWatch);
 
@@ -49,40 +71,88 @@ export function getBackgroundServiceClass() {
                     return global.__native(this);
                 }
                 onStartCommand(intent, flags, startId) {
-                    console.log('service onStartCommand');
+                    console.log("service onStartCommand");
                     this.super.onStartCommand(intent, flags, startId);
                     return android.app.Service.START_STICKY;
                 }
                 onCreate() {
-                    console.log('service onCreate');
-                    _startWatch();
+                    console.log("service onCreate");
+                    if (device.sdkVersion >= "26") {
+                        this.startForeground(1, new android.app.Notification());
+                    }
+                    let that = this;
+                    geolocation.enableLocationRequest().then(
+                        function() {
+                            that.id = geolocation.watchLocation(
+                                function(loc) {
+                                    if (loc) {
+                                        let toast = Toast.makeText(
+                                            "Background Location: " +
+                                                loc.latitude +
+                                                " " +
+                                                loc.longitude
+                                        );
+                                        toast.show();
+                                        console.log(
+                                            "Background Location: " +
+                                                loc.latitude +
+                                                " " +
+                                                loc.longitude
+                                        );
+                                    }
+                                },
+                                function(e) {
+                                    console.log(
+                                        "Background watchLocation error: " +
+                                            (e.message || e)
+                                    );
+                                },
+                                {
+                                    desiredAccuracy: Accuracy.high,
+                                    updateDistance: 0.1,
+                                    updateTime: 3000,
+                                    minimumUpdateTime: 100
+                                }
+                            );
+                        },
+                        function(e) {
+                            console.log(
+                                "Background enableLocationRequest error: " +
+                                    (e.message || e)
+                            );
+                        }
+                    );
                 }
                 onBind(intent) {
-                    console.log('service onBind');
+                    console.log("service onBind");
                 }
                 onUnbind(intent) {
-                    console.log('service onUnbind');
+                    console.log("service onUnbind");
                 }
                 onDestroy() {
-                    console.log('service onDestroy');
+                    console.log("service onDestroy");
+                    if (android.os.Build.VERSION.SDK_INT >= 26) {
+                        this.stopForeground(true);
+                    }
                     _clearWatch();
                 }
             }
             return BackgroundService;
         } else {
             @JavaProxy("com.nativescript.location.BackgroundService26")
-            class BackgroundService26 extends (<any>android.app).job.JobService {
+            class BackgroundService26 extends (<any>android.app).job
+                .JobService {
                 constructor() {
                     super();
                     return global.__native(this);
                 }
                 onStartJob(): boolean {
-                    console.log('service onStartJob');
+                    console.log("service onStartJob");
                     _startWatch();
                     return true;
                 }
                 onStopJob(jobParameters: any): boolean {
-                    console.log('service onStopJob');
+                    console.log("service onStopJob");
                     this.jobFinished(jobParameters, false);
                     _clearWatch();
                     return false;

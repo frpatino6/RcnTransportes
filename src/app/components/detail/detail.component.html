@@ -20,14 +20,13 @@
         </GridLayout>
         <GridLayout row="1" col="0" columns="*,*,*" rows="auto" width="100%" height="100%">
             <StackLayout row="0" col="0" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
-                <Label *ngIf="showPause" text="&#xf28b;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em;"></Label>
+                <Label *ngIf="showPause" text="&#xf28b;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em;" (tap)="showConfirmActionPausa()"></Label>
             </StackLayout>
-            <StackLayout row="0" col="1" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
-                <Label *ngIf="showPlay" text="&#xf144;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="showConfirmAction()"></Label>
+            <StackLayout row="0" col="0" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
+                <Label *ngIf="showPlay" text="&#xf144;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="showConfirmActionStart()"></Label>
             </StackLayout>
             <StackLayout row="0" col="2" horizontalAlignment="center" orientation="horizontal" width="100%" height="100%">
-                <Label *ngIf="showStop" text="&#xf28d;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="stopBackgroundTap()"></Label>
+                <Label *ngIf="showStop" text="&#xf28d;" verticalAlignment="bottom" class="buttonActions far" style="font-size: 50em; " (tap)="showConfirmActionStop()"></Label>
             </StackLayout>
         </GridLayout>
     </GridLayout>
-</RadSideDrawer>

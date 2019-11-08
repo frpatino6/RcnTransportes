@@ -21,6 +21,18 @@ components that have the btn class name.
     font-size: 18;
 }
 
+.btn_ok {
+    background-color: #1ab394;
+}
+
+.btn_cancel {
+    background-color: #ec4758;
+}
+
+.btn_pausa {
+    background-color: #f8ac59;
+}
+
 .far {
     font-family: Font Awesome 5 Free, fa-regular-400;
     font-weight: 400;

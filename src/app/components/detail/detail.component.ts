@@ -8,6 +8,7 @@ import * as utils from "tns-core-modules/utils/utils";
 import { device } from "tns-core-modules/platform/platform";
 import * as geolocation from "nativescript-geolocation";
 import { BackgroundServiceClass } from "~/app/shared/services/backgound-service";
+import { DetailDriverServiceService } from "~/app/shared/services/detail-driver-service.service";
 
 let watchIds = [];
 const jobId = 308; // the id should be unique for each background job. We only use one, so we set the id to be the same each time.
@@ -19,17 +20,49 @@ declare var com: any;
     styleUrls: ["./detail.component.css"]
 })
 export class DetailDriverServiceComponent implements OnInit {
+    public listPauseReasons: any[] = [];
     public driversServices: Shedule;
     public showStop: boolean;
     public showPause: boolean;
     public showPlay: boolean;
     public locations: any;
     public lat: String = "";
+    private idService: number;
+    public dialogOpen = false;
+    private parametersGeoLocalization: any;
 
-    constructor(private route: ActivatedRoute, private zone: NgZone) {
+    constructor(
+        private route: ActivatedRoute,
+        private listServices: DetailDriverServiceService
+    ) {
         application.on(application.exitEvent, this._stopBackgroundJob);
+        let context = application.android.context;
+        // var intent = new android.content.Intent()
+        // intent.setClassName(context, "com.pat.geolocalization")
+        // context.startService(intent);
     }
-    showConfirmAction() {
+
+    sendGeoLocalization() {
+        this.parametersGeoLocalization = {};
+        this.parametersGeoLocalization.id = 5;
+        this.parametersGeoLocalization.lat = 10;
+        this.parametersGeoLocalization.lon = 15;
+
+        this.listServices
+            .sendGeoLocalization(this.parametersGeoLocalization)
+            .subscribe(
+                result => {
+                    this.driversServices = result;
+                    //this.pullRefresh.refreshing = false;
+                    console.log(result);
+                    this.getListPauseReasons();
+                },
+                error => {
+                    console.log(error.err);
+                }
+            );
+    }
+    showConfirmActionStart() {
         dialogs
             .confirm({
                 title: "Transportes",
@@ -44,7 +77,48 @@ export class DetailDriverServiceComponent implements OnInit {
                     this.showPause = true;
                     this.showPlay = false;
                     // Get current location with high accuracy
-						  this.startBackgroundTap();
+                    this.startBackgroundTap();
+                }
+                console.log("Dialog result: " + result);
+            });
+    }
+    showConfirmActionPausa() {
+        var self = this;
+        dialogs
+            .action({
+                message: "Seleccione la causa",
+                cancelButtonText: "Cancel",
+                actions: self.listPauseReasons.map(e => e.nombre)
+            })
+            .then(function(result) {
+                if (result != "Cancel") {
+                    self.showPause = false;
+                    self.showPlay = true;
+                    self.stopBackgroundTap();
+                    console.log(
+                        "Dialog result: " +
+                            self.listPauseReasons.find(e => e.nombre == result)
+                                .id
+                    );
+                }
+            });
+    }
+    showConfirmActionStop() {
+        dialogs
+            .confirm({
+                title: "Transportes",
+                message: "Está seguro de finalizar el servicio?",
+                okButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            })
+            .then(result => {
+                // result argument is boolean
+                if (result) {
+                    this.showStop = false;
+                    this.showPause = false;
+                    this.showPlay = true;
+                    // Get current location with high accuracy
+                    this.stopBackgroundTap();
                 }
                 console.log("Dialog result: " + result);
             });
@@ -72,13 +146,12 @@ export class DetailDriverServiceComponent implements OnInit {
                     context,
                     BackgroundServiceClass.class
                 );
-
                 const builder = new (<any>android.app).job.JobInfo.Builder(
                     jobId,
-                    component
+                    component                    
                 );
                 builder.setOverrideDeadline(0);
-                return jobScheduler.schedule(builder.build());
+                jobScheduler.schedule(builder.build());
             } else {
                 let intent = new android.content.Intent(
                     context,
@@ -101,6 +174,7 @@ export class DetailDriverServiceComponent implements OnInit {
                 context.stopService(intent);
             }
         }
+        this.sendGeoLocalization();
     }
     enableLocationTap() {
         geolocation.isEnabled().then(
@@ -130,8 +204,9 @@ export class DetailDriverServiceComponent implements OnInit {
         geolocation
             .getCurrentLocation({
                 desiredAccuracy: Accuracy.high,
-                maximumAge: 5000,
-                timeout: 10000
+                updateDistance: 1,
+                updateTime: 3000,
+                minimumUpdateTime: 100
             })
             .then(
                 function(loc) {
@@ -187,9 +262,50 @@ export class DetailDriverServiceComponent implements OnInit {
         let self = this;
         this.route.queryParams.subscribe(params => {
             self.driversServices = JSON.parse(params["selectedService"]);
-            console.log(self.driversServices.descripcionRecorrido);
+            self.idService = self.driversServices.id;
+            console.log(`Id seleccionado ${self.driversServices.id}`);
         });
 
         this.enableLocationTap();
+        this.getListServicesByDriver();
+    }
+    getListServicesByDriver() {
+        this.listServices
+            .getListServicesByDriverDetail(this.idService)
+            .subscribe(
+                result => {
+                    this.driversServices = result;
+                    //this.pullRefresh.refreshing = false;
+                    console.log(result);
+                    this.getListPauseReasons();
+                },
+                error => {
+                    console.error("error...");
+                }
+            );
+    }
+
+    getListPauseReasons() {
+        this.listServices.getListPauseReasons().subscribe(
+            result => {
+                this.listPauseReasons = result;
+                //this.pullRefresh.refreshing = false;
+                console.log(result);
+            },
+            error => {
+                //this.showMessageDialog(error.err);
+            }
+        );
+    }
+    puaseServiceTap() {
+        this.showDialog();
+    }
+
+    showDialog() {
+        this.dialogOpen = true;
+    }
+
+    closeDialog() {
+        this.dialogOpen = false;
     }
 }

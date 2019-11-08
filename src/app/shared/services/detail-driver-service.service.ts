@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-
+import { Shedule } from "../model/shedule";
+import { Observable, Subscriber } from "rxjs";
 @Injectable({
     providedIn: "root"
 })
@@ -16,5 +17,28 @@ export class DetailDriverServiceService {
         });
 
         return headers;
+    }
+    public dataDrivers: Shedule[] = new Array();
+    // private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
+    //   private serverUrl = "http://rcntviisdes/Intranet/GerenciaTI/API_Transportes/api/";
+    private serverUrl = "http://192.168.0.6/Conductores/";
+
+    public getListServicesByDriverDetail(id: Number): Observable<Shedule> {
+        let url: string = this.serverUrl + `ScheduleByDriverDet/${id}`;
+        console.log(url);
+        return this.http.get<Shedule>(url);
+    }
+    public getListPauseReasons(): Observable<any> {
+        let url: string = this.serverUrl + `lstPause/`;
+        console.log(url);
+        return this.http.get<any>(url);
+        
+    }
+    public sendGeoLocalization(parameters): Observable<any> {
+        let url: string =
+            this.serverUrl +
+            `SaveGPS?id=${parameters.id}&Latitude=${parameters.lat}&Longitude=${parameters.lon}/`;
+        console.log(url);
+        return this.http.post<any>(url, this.createRequestHeader());
     }
 }
