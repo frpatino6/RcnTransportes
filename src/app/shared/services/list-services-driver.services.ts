@@ -9,19 +9,18 @@ export class ListServicesByDriver {
 
     public dataDrivers: Shedule[] = new Array();
     // private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
-    //   private serverUrl = "http://rcntviisdes/Intranet/GerenciaTI/API_Transportes/api/";
-    private serverUrl = "http://192.168.0.6/Conductores/";
+       ///private serverUrl = "http://rcntviisdev/Intranet/GerenciaTI/API_Transportes/api/";
+    private serverUrl = "http://192.168.0.7/Conductores/";
 
     public getListServicesByDriver(docNumber: String): Observable<Shedule[]> {
         if (docNumber == undefined) docNumber = "1";
         let url: string =
             this.serverUrl + `ScheduleByDriver?NoDocumento=${docNumber}`;
-        console.log(url);
+       // console.log(url);
         //return this.http.get<Shedule[]>(url);
         // verifica plataforma
         return this.http.get<Shedule[]>(url + docNumber);
     }
-
     private createRequestHeader() {
         let headers = new HttpHeaders({
             "Content-Type": "application/json",

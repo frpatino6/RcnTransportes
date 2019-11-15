@@ -207,7 +207,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.login();
         }
     }
- 
+
     login() {
         this.user.accessToken = this._token;
         indicator.show({
@@ -217,9 +217,11 @@ export class LoginComponent implements OnInit, OnDestroy {
             color: "#4B9ED6"
         });
 
+        let resLogin: any;
         let self = this;
         this.userService.login(self.user).subscribe(
             result => {
+                resLogin = result;
                 localStorage.setItem("emailUser", self.user.email);
                 let navigationExtras = {
                     queryParams: {
@@ -227,7 +229,20 @@ export class LoginComponent implements OnInit, OnDestroy {
                         numDocumento: result.Numero_Documento
                     }
                 };
-                console.log(result.Numero_Documento);
+                console.log(result);
+
+                if (!resLogin.authenticated) {
+                    this.showMessageDialog("Usuario o contraseña no válido");
+                    indicator.hide();
+                    return;
+                }
+                if (!resLogin.authorized) {
+                    this.showMessageDialog(
+                        "No tiene autorización para el ingreso"
+                    );
+                    indicator.hide();
+                    return;
+                }
                 this.routerExtensions.navigate(
                     ["/listServices"],
                     navigationExtras
@@ -264,7 +279,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         let dialogs = require("tns-core-modules/ui/dialogs");
         dialogs
             .alert({
-                title: "Solpe",
+                title: "PAT",
                 message: message,
                 okButtonText: "Aceptar"
             })

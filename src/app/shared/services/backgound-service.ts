@@ -4,6 +4,7 @@ import * as application from "tns-core-modules/application";
 import { device } from "tns-core-modules/platform";
 import * as Toast from "nativescript-toast";
 
+const applicationModule = require("tns-core-modules/application");
 let watchId;
 
 function _clearWatch() {
@@ -21,34 +22,34 @@ function _startWatch() {
                 function(loc) {
                     if (loc) {
                         let toast = Toast.makeText(
-                            "Background Location: \n" +
-                                loc.latitude +
-                                ", " +
-                                loc.longitude
+                            `Background Latitud  Latitud ${
+                                loc.latitude
+                            } longitud ${loc.longitude} altura ${
+                                loc.altitude
+                            } velocidad ${loc.speed > 5 ? 0 : loc.speed}`
                         );
                         toast.show();
                         console.log(
-                            "Background Location: " +
-                                loc.latitude +
-                                " " +
+                            `Background Latitud ${loc.latitude} longitud ${
                                 loc.longitude
-                        );
-                        console.log(
-                            "Velocity : " +
-                                loc.speed
+                            } altura ${loc.altitude} velocidad ${
+                                loc.speed > 5 ? 0 : loc.speed
+                            }`
                         );
                     }
                 },
                 function(e) {
                     console.log(
-                        "Background watchLocation error: " + (e.message || e)
+                        "Background watch Location error: " + (e.message || e)
                     );
                 },
                 {
                     desiredAccuracy: Accuracy.high,
-                    updateDistance: 1.0,
-                    updateTime: 3000,
-                    minimumUpdateTime: 100
+                    updateDistance: 0.1,
+                    updateTime: 1000,
+                    iosAllowsBackgroundLocationUpdates: true,
+                    iosPausesLocationUpdatesAutomatically: false,
+                    iosOpenSettingsIfLocationHasBeenDenied: true
                 }
             );
         },
@@ -87,37 +88,50 @@ export function getBackgroundServiceClass() {
                                 function(loc) {
                                     if (loc) {
                                         let toast = Toast.makeText(
-                                            "Background Location: " +
-                                                loc.latitude +
-                                                " " +
+                                            `BACKGROUND Latitud ${
+                                                loc.latitude
+                                            } longitud ${
                                                 loc.longitude
+                                            } altura ${
+                                                loc.altitude
+                                            } velocidad ${
+                                                loc.speed > 5 ? 0 : loc.speed
+                                            }`
                                         );
                                         toast.show();
                                         console.log(
-                                            "Background Location: " +
-                                                loc.latitude +
-                                                " " +
+                                            ` BACKGROUND Latitud ${
+                                                loc.latitude
+                                            } longitud ${
                                                 loc.longitude
+                                            } altura ${
+                                                loc.altitude
+                                            } velocidad ${
+                                                loc.speed > 5 ? 0 : loc.speed
+                                            }`
                                         );
                                     }
                                 },
                                 function(e) {
                                     console.log(
-                                        "Background watchLocation error: " +
+                                        "BACKGROUND watchLocation error: " +
                                             (e.message || e)
                                     );
                                 },
                                 {
                                     desiredAccuracy: Accuracy.high,
-                                    updateDistance: 0.1,
-                                    updateTime: 3000,
-                                    minimumUpdateTime: 100
+                                    updateDistance: 10,
+                                    updateTime: 5000,
+                                    minimumUpdateTime: 100,
+                                    iosAllowsBackgroundLocationUpdates: true,
+                                    iosPausesLocationUpdatesAutomatically: false,
+                                    iosOpenSettingsIfLocationHasBeenDenied: true
                                 }
                             );
                         },
                         function(e) {
                             console.log(
-                                "Background enableLocationRequest error: " +
+                                "BACKGROUND enableLocationRequest error: " +
                                     (e.message || e)
                             );
                         }

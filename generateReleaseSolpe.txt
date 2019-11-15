@@ -1,0 +1,11 @@
+tns build android --release --key-store-path E:\Rcn\Conductores\DEVELOPMENT\IxnetAndroidKeys.jks --key-store-password patatabraba --key-store-alias ixnetandroidkey --key-store-alias-password patatabraba
+
+
+The first things you need to do is to modify your Info.plist file that is located in ./app/App_Resources/iOS/Info.plist. 
+To specify that your app requires to be woken up in background 
+regularly in order to check for new content you need to add the following snippet:
+
+<key>UIBackgroundModes</key>
+<array>
+    <string>fetch</string>
+</array>

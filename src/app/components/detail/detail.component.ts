@@ -9,7 +9,9 @@ import { device } from "tns-core-modules/platform/platform";
 import * as geolocation from "nativescript-geolocation";
 import { BackgroundServiceClass } from "~/app/shared/services/backgound-service";
 import { DetailDriverServiceService } from "~/app/shared/services/detail-driver-service.service";
+import * as Toast from "nativescript-toast";
 
+var applications = require("application");
 let watchIds = [];
 const jobId = 308; // the id should be unique for each background job. We only use one, so we set the id to be the same each time.
 declare var com: any;
@@ -25,7 +27,7 @@ export class DetailDriverServiceComponent implements OnInit {
     public showStop: boolean;
     public showPause: boolean;
     public showPlay: boolean;
-    public locations: any;
+    public locations: any[] = [];
     public lat: String = "";
     private idService: number;
     public dialogOpen = false;
@@ -37,9 +39,35 @@ export class DetailDriverServiceComponent implements OnInit {
     ) {
         application.on(application.exitEvent, this._stopBackgroundJob);
         let context = application.android.context;
-        // var intent = new android.content.Intent()
-        // intent.setClassName(context, "com.pat.geolocalization")
-        // context.startService(intent);
+        const self = this;
+        // App went to background...
+        applications.on(application.suspendEvent, function(args) {
+            if (args.android) {
+                // For Android applications, args.android is an android activity class.
+                console.log("Activity: " + args.android);
+                let toast = Toast.makeText("PAT Se ejecuta en SEGUNDO plano");
+                toast.show();
+
+                if (!self.showPlay) self.startBackgroundTap();
+            } else if (args.ios) {
+                // For iOS applications, args.ios is UIApplication.
+                console.log("UIApplication: " + args.ios);
+            }
+        });
+
+        // App was reopened...
+        applications.on(application.resumeEvent, function(args) {
+            if (args.android) {
+                // For Android applications, args.android is an android activity class.
+                console.log("Activity: " + args.android);
+                let toast = Toast.makeText("PAT Se ejecuta en PRIMER plano");
+                toast.show();
+                if (!self.showPlay) self.stopBackgroundTap();
+            } else if (args.ios) {
+                // For iOS applications, args.ios is UIApplication.
+                console.log("UIApplication: " + args.ios);
+            }
+        });
     }
 
     sendGeoLocalization() {
@@ -77,7 +105,8 @@ export class DetailDriverServiceComponent implements OnInit {
                     this.showPause = true;
                     this.showPlay = false;
                     // Get current location with high accuracy
-                    this.startBackgroundTap();
+                    //this.startBackgroundTap();
+                    this.buttonStartTap();
                 }
                 console.log("Dialog result: " + result);
             });
@@ -148,7 +177,7 @@ export class DetailDriverServiceComponent implements OnInit {
                 );
                 const builder = new (<any>android.app).job.JobInfo.Builder(
                     jobId,
-                    component                    
+                    component
                 );
                 builder.setOverrideDeadline(0);
                 jobScheduler.schedule(builder.build());
@@ -219,13 +248,30 @@ export class DetailDriverServiceComponent implements OnInit {
                 }
             );
     }
+
     buttonStartTap() {
         try {
+            const self = this;
             watchIds.push(
                 geolocation.watchLocation(
                     function(loc) {
                         if (loc) {
-                            this.locations.push(loc);
+                            self.locations.push(loc);
+                            let toast = Toast.makeText(
+                                `FOREGROUND Latitud ${loc.latitude} longitud ${
+                                    loc.longitude
+                                } altura ${loc.altitude} velocidad ${
+                                    loc.speed > 5 ? 0 : loc.speed
+                                }`
+                            );
+                            toast.show();
+                            console.log(
+                                `FOREGROUND Latitud ${loc.latitude} longitud ${
+                                    loc.longitude
+                                } altura ${loc.altitude} velocidad ${
+                                    loc.speed > 5 ? 0 : loc.speed
+                                }`
+                            );
                         }
                     },
                     function(e) {
@@ -233,9 +279,11 @@ export class DetailDriverServiceComponent implements OnInit {
                     },
                     {
                         desiredAccuracy: Accuracy.high,
-                        updateDistance: 1,
-                        updateTime: 3000,
-                        minimumUpdateTime: 100
+                        updateDistance: 0.1,
+                        updateTime: 1000,
+                        iosAllowsBackgroundLocationUpdates: true,
+                        iosPausesLocationUpdatesAutomatically: false,
+                        iosOpenSettingsIfLocationHasBeenDenied: true
                     }
                 )
             );

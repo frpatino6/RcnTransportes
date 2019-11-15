@@ -22,7 +22,7 @@ export class UserService {
 
     // private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
     //private serverUrl = "http://rcntviisdes/Intranet/GerenciaTI/API_Transportes/api/";
-    private serverUrl = "http://192.168.0.6/Conductores/";
+    private serverUrl = "http://192.168.0.7/Conductores/";
     register(user: User) {}
 
     login(user: User) {

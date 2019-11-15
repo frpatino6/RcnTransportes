@@ -6,7 +6,7 @@ import { LoginComponent } from "./components/login/login.component";
 
 
 const routes: Routes = [
-    { path: "", redirectTo: BackendService.isUserLoggedIn() ? "/listServices" : "/login", pathMatch: "full" },
+    { path: "", redirectTo: false ? "/listServices" : "/login", pathMatch: "full" },
     { path: "login", component: LoginComponent },
     { path: "listServices", loadChildren: () => import("~/app/components/driverServices/driver.services.module").then((m) => m.ListServicesDriverModule) },
     { path: "detailServices", loadChildren: () => import("~/app/components/detail/detail.module").then((m) => m.DetailDriverServiceModule) }

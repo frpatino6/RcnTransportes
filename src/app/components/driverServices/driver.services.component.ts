@@ -26,7 +26,7 @@ export class ListServicesDriverComponent implements OnInit {
     ) {
         this.route.queryParams.subscribe(params => {
             this.docNumber = params["numDocumento"];
-            console.log("Parametros: " + params["numDocumento"]);
+           // console.log("Parametros: " + params["numDocumento"]);
         });
     }
 
@@ -44,7 +44,7 @@ export class ListServicesDriverComponent implements OnInit {
             result => {
                 this.dataDrivers = result;
                 this.pullRefresh.refreshing = false;
-                console.log(result);
+               // console.log(result);
             },
             error => {
                 this.showMessageDialog(error.err);
@@ -60,11 +60,11 @@ export class ListServicesDriverComponent implements OnInit {
                 okButtonText: "Aceptar"
             })
             .then(function() {
-                console.log("Dialog closed!");
+               // console.log("Dialog closed!");
             });
     }
     onClickDetail(selectedService) {
-        console.log(`id servicio ${JSON.stringify(selectedService.id)}`);
+       // console.log(`id servicio ${JSON.stringify(selectedService.id)}`);
         let navigationExtras = {
             queryParams: { selectedService: JSON.stringify(selectedService) }
         };
