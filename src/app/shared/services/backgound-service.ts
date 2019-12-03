@@ -3,12 +3,14 @@ import { Accuracy } from "tns-core-modules/ui/enums";
 import * as application from "tns-core-modules/application";
 import { device } from "tns-core-modules/platform";
 import * as Toast from "nativescript-toast";
-
+const ad = require("tns-core-modules/utils/utils").ad;
 const applicationModule = require("tns-core-modules/application");
 let watchId;
 
 function _clearWatch() {
+    console.log("_clearWatch");
     if (watchId) {
+        console.log(`WatchId ${watchId}`);
         geolocation.clearWatch(watchId);
         watchId = null;
     }
@@ -45,13 +47,15 @@ function _startWatch() {
                 },
                 {
                     desiredAccuracy: Accuracy.high,
-                    updateDistance: 0.1,
-                    updateTime: 1000,
+                    updateDistance: 0,
+                    updateTime: 100,
+                    minimumUpdateTime: 100,
                     iosAllowsBackgroundLocationUpdates: true,
                     iosPausesLocationUpdatesAutomatically: false,
                     iosOpenSettingsIfLocationHasBeenDenied: true
                 }
             );
+            console.log(watchId);
         },
         function(e) {
             console.log(
@@ -84,7 +88,7 @@ export function getBackgroundServiceClass() {
                     let that = this;
                     geolocation.enableLocationRequest().then(
                         function() {
-                            that.id = geolocation.watchLocation(
+                            watchId = geolocation.watchLocation(
                                 function(loc) {
                                     if (loc) {
                                         let toast = Toast.makeText(
@@ -95,6 +99,8 @@ export function getBackgroundServiceClass() {
                                             } altura ${
                                                 loc.altitude
                                             } velocidad ${
+                                                loc.speed > 5 ? 0 : loc.speed
+                                            } hora ejecución${
                                                 loc.speed > 5 ? 0 : loc.speed
                                             }`
                                         );
@@ -120,8 +126,8 @@ export function getBackgroundServiceClass() {
                                 },
                                 {
                                     desiredAccuracy: Accuracy.high,
-                                    updateDistance: 10,
-                                    updateTime: 5000,
+                                    updateDistance: 0.1,
+                                    updateTime: 100,
                                     minimumUpdateTime: 100,
                                     iosAllowsBackgroundLocationUpdates: true,
                                     iosPausesLocationUpdatesAutomatically: false,
@@ -161,7 +167,11 @@ export function getBackgroundServiceClass() {
                     return global.__native(this);
                 }
                 onStartJob(): boolean {
-                    console.log("service onStartJob");
+                    let intent = new android.content.Intent("customservice");
+                    var broadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(
+                        ad.getApplicationContext()
+                    );
+                    broadcastManager.sendBroadcast(intent);
                     _startWatch();
                     return true;
                 }

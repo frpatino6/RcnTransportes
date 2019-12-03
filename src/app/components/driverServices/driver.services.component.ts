@@ -42,9 +42,26 @@ export class ListServicesDriverComponent implements OnInit {
     getListSerrvicesByDriver() {
         this.listServices.getListServicesByDriver(this.docNumber).subscribe(
             result => {
-                this.dataDrivers = result;
-                this.pullRefresh.refreshing = false;
-               // console.log(result);
+                this.dataDrivers = result.map(item => {
+                    let itemDriver : Shedule = new Shedule();
+                    itemDriver.id= item.Id;
+                    itemDriver.solicitudNombre= item.SolicitudNombre;
+                    itemDriver.fechaInicial= item.FechaInicial;
+                    itemDriver.fechaFinal= item.FechaFinal;
+                    itemDriver.nombreUsuarioSolicitante= item.NombreUsuarioSolicitante;
+                    itemDriver.celularSolicitante= item.CelularSolicitante;
+                    itemDriver.descripcionRecorrido= item.DescripcionRecorrido;
+                    itemDriver.observaciones= item.Observaciones;
+                    itemDriver.nombreTipoVehiculoProgramado= item.NombreTipoVehiculoProgramado;
+                    itemDriver.nombreModalidadServicio= item.NombreModalidadServicio;
+                    itemDriver.nombreProveedor= item.NombreProveedor;
+                    itemDriver.placa= item.Placa;
+                    itemDriver.nombreConductor= item.NombreConductor;
+                    itemDriver.celularConductor= item.CelularConductor;
+
+                    return itemDriver
+                });
+                this.pullRefresh.refreshing = false;             
             },
             error => {
                 this.showMessageDialog(error.err);

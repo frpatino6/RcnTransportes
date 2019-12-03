@@ -10,9 +10,10 @@ import * as geolocation from "nativescript-geolocation";
 import { BackgroundServiceClass } from "~/app/shared/services/backgound-service";
 import { DetailDriverServiceService } from "~/app/shared/services/detail-driver-service.service";
 import * as Toast from "nativescript-toast";
+import { BackgroundFetch } from "nativescript-background-fetch";
 
 var applications = require("application");
-let watchIds = [];
+
 const jobId = 308; // the id should be unique for each background job. We only use one, so we set the id to be the same each time.
 declare var com: any;
 
@@ -24,14 +25,17 @@ declare var com: any;
 export class DetailDriverServiceComponent implements OnInit {
     public listPauseReasons: any[] = [];
     public driversServices: Shedule;
-    public showStop: boolean;
-    public showPause: boolean;
-    public showPlay: boolean;
+    public showStop: boolean = false;
+    public showPause: boolean = false;
+    public showPlay: boolean = true;
     public locations: any[] = [];
+    public watchIds = [];
     public lat: String = "";
     private idService: number;
     public dialogOpen = false;
     private parametersGeoLocalization: any;
+    private _counter: number;
+    private _message: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -41,53 +45,169 @@ export class DetailDriverServiceComponent implements OnInit {
         let context = application.android.context;
         const self = this;
         // App went to background...
-        applications.on(application.suspendEvent, function(args) {
+    }
+    ngOnInit() {
+        this.showStop = false;
+        this.showPause = false;
+        this.showPlay = true;
+        let self = this;
+        this.route.queryParams.subscribe(params => {
+            self.driversServices = JSON.parse(params["selectedService"]);
+            self.idService = self.driversServices.id;
+        });
+
+        this.enableLocationTap();
+        this.getListServicesByDriver();
+        applications.on(application.suspendEvent, args => {
+            const self = this;
             if (args.android) {
                 // For Android applications, args.android is an android activity class.
-                console.log("Activity: " + args.android);
                 let toast = Toast.makeText("PAT Se ejecuta en SEGUNDO plano");
                 toast.show();
 
                 if (!self.showPlay) self.startBackgroundTap();
             } else if (args.ios) {
                 // For iOS applications, args.ios is UIApplication.
-                console.log("UIApplication: " + args.ios);
+            }
+            if (!self.showPlay) {
+                BackgroundFetch.start(
+                    () => {
+                        console.log("BackgroundFetch successfully started");
+                    },
+                    status => {
+                        console.log(
+                            "BackgroundFetch failed to start: ",
+                            status
+                        );
+                    }
+                );
             }
         });
 
         // App was reopened...
-        applications.on(application.resumeEvent, function(args) {
+        applications.on(application.resumeEvent, args => {
             if (args.android) {
                 // For Android applications, args.android is an android activity class.
-                console.log("Activity: " + args.android);
                 let toast = Toast.makeText("PAT Se ejecuta en PRIMER plano");
                 toast.show();
-                if (!self.showPlay) self.stopBackgroundTap();
+                this.stopBackgroundTap();
             } else if (args.ios) {
                 // For iOS applications, args.ios is UIApplication.
-                console.log("UIApplication: " + args.ios);
             }
+
+            BackgroundFetch.stop(
+                () => {
+                    console.log("BackgroundFetch successfully stoped");
+                },
+                status => {
+                    console.log("BackgroundFetch failed to stoped: ", status);
+                }
+            );
         });
+        this.initListener();
+        this.asyncLocalization();
+
+        BackgroundFetch.stop(
+            () => {
+                console.log("BackgroundFetch successfully stoped");
+            },
+            status => {
+                console.log("BackgroundFetch failed to stoped: ", status);
+            }
+        );
+    }
+    onLoaded(args) {
+        console.log("onLoaded");
+    }
+    initListener() {
+        if (application.ios) {
+            class MyDelegate extends UIResponder {
+                public static ObjCProtocols = [UIApplicationDelegate];
+
+                public applicationPerformFetchWithCompletionHandler(
+                    application: UIApplication,
+                    completionHandler: any
+                ) {
+                    console.log("- AppDelegate Rx Fetch event");
+                    BackgroundFetch.performFetchWithCompletionHandler(
+                        completionHandler,
+                        application.applicationState
+                    );
+                }
+            }
+            application.ios.delegate = MyDelegate;
+        } else if (application.android) {
+            BackgroundFetch.registerHeadlessTask(async () => {
+                console.log("[BackgroundFetch] Demo Headless Task");
+                let result = await doWork();
+                BackgroundFetch.finish();
+            });
+
+            let doWork = () => {
+                return new Promise((resolve, reject) => {
+                    // Do some work.
+                    console.log("doWork");
+                    let result = true;
+                    if (result) {
+                        resolve("OK");
+                    } else {
+                        reject("OOPS!");
+                    }
+                });
+            };
+        }
     }
 
+    asyncLocalization() {
+        BackgroundFetch.status(status => {
+            switch (status) {
+                case BackgroundFetch.STATUS_RESTRICTED:
+                    console.log("BackgroundFetch restricted");
+                    break;
+                case BackgroundFetch.STATUS_DENIED:
+                    console.log("BackgroundFetch denied");
+                    break;
+                case BackgroundFetch.STATUS_AVAILABLE:
+                    console.log("BackgroundFetch is enabled");
+                    break;
+            }
+        });
+
+        BackgroundFetch.configure(
+            {
+                minimumFetchInterval: 15,
+                stopOnTerminate: false,
+                startOnBoot: true,
+                enableHeadless: true
+            },
+            function() {
+                console.log(
+                    `[BackgroundFetch] FERNANDO Event Received! ${this._counter}`
+                );
+                this._counter++;
+                this.updateMessage();
+                BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
+            }.bind(this),
+            function(error) {
+                console.log("[BackgroundFetch] FAILED");
+            }.bind(this)
+        );
+
+        // Initialize default values.
+        this._counter = 0;
+        this.updateMessage();
+    }
     sendGeoLocalization() {
         this.parametersGeoLocalization = {};
-        this.parametersGeoLocalization.id = 5;
-        this.parametersGeoLocalization.lat = 10;
-        this.parametersGeoLocalization.lon = 15;
 
         this.listServices
             .sendGeoLocalization(this.parametersGeoLocalization)
             .subscribe(
                 result => {
                     this.driversServices = result;
-                    //this.pullRefresh.refreshing = false;
-                    console.log(result);
                     this.getListPauseReasons();
                 },
-                error => {
-                    console.log(error.err);
-                }
+                error => {}
             );
     }
     showConfirmActionStart() {
@@ -108,7 +228,6 @@ export class DetailDriverServiceComponent implements OnInit {
                     //this.startBackgroundTap();
                     this.buttonStartTap();
                 }
-                console.log("Dialog result: " + result);
             });
     }
     showConfirmActionPausa() {
@@ -124,11 +243,6 @@ export class DetailDriverServiceComponent implements OnInit {
                     self.showPause = false;
                     self.showPlay = true;
                     self.stopBackgroundTap();
-                    console.log(
-                        "Dialog result: " +
-                            self.listPauseReasons.find(e => e.nombre == result)
-                                .id
-                    );
                 }
             });
     }
@@ -146,10 +260,9 @@ export class DetailDriverServiceComponent implements OnInit {
                     this.showStop = false;
                     this.showPause = false;
                     this.showPlay = true;
-                    // Get current location with high accuracy
-                    this.stopBackgroundTap();
+                    // Get current location with high accuracy                    
+                    this.buttonStopTap();
                 }
-                console.log("Dialog result: " + result);
             });
     }
     _stopBackgroundJob() {
@@ -160,7 +273,6 @@ export class DetailDriverServiceComponent implements OnInit {
             );
             if (jobScheduler.getPendingJob(jobId) !== null) {
                 jobScheduler.cancel(jobId);
-                console.log(`Job Canceled: ${jobId}`);
             }
         }
     }
@@ -181,6 +293,7 @@ export class DetailDriverServiceComponent implements OnInit {
                 );
                 builder.setOverrideDeadline(0);
                 jobScheduler.schedule(builder.build());
+                console.log(`Job Scheduled: ${jobScheduler.schedule(builder.build())}`);
             } else {
                 let intent = new android.content.Intent(
                     context,
@@ -205,7 +318,8 @@ export class DetailDriverServiceComponent implements OnInit {
         }
         this.sendGeoLocalization();
     }
-    enableLocationTap() {
+    public enableLocationTap() {
+        console.log("enableLocationTap");
         geolocation.isEnabled().then(
             function(isEnabled) {
                 if (!isEnabled) {
@@ -243,88 +357,86 @@ export class DetailDriverServiceComponent implements OnInit {
                         this.locations.push(loc);
                     }
                 },
-                function(e) {
-                    console.log("Error: " + (e.message || e));
-                }
+                function(e) {}
             );
     }
 
     buttonStartTap() {
         try {
             const self = this;
-            watchIds.push(
+            self.watchIds.push(
                 geolocation.watchLocation(
                     function(loc) {
                         if (loc) {
                             self.locations.push(loc);
-                            let toast = Toast.makeText(
-                                `FOREGROUND Latitud ${loc.latitude} longitud ${
-                                    loc.longitude
-                                } altura ${loc.altitude} velocidad ${
-                                    loc.speed > 5 ? 0 : loc.speed
-                                }`
+                            /* let toast = Toast.makeText(
+                                `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
                             );
-                            toast.show();
+                            toast.show();*/
                             console.log(
-                                `FOREGROUND Latitud ${loc.latitude} longitud ${
-                                    loc.longitude
-                                } altura ${loc.altitude} velocidad ${
-                                    loc.speed > 5 ? 0 : loc.speed
-                                }`
+                                `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
                             );
                         }
                     },
-                    function(e) {
-                        console.log("Error: " + e.message);
-                    },
+                    function(e) {},
                     {
                         desiredAccuracy: Accuracy.high,
-                        updateDistance: 0.1,
-                        updateTime: 1000,
+                        updateDistance: 0,
+                        updateTime: 100,
                         iosAllowsBackgroundLocationUpdates: true,
                         iosPausesLocationUpdatesAutomatically: false,
                         iosOpenSettingsIfLocationHasBeenDenied: true
                     }
                 )
             );
-        } catch (ex) {
-            console.log("Error: " + ex.message);
-        }
+        } catch (ex) {}
     }
 
     buttonStopTap() {
-        let watchId = watchIds.pop();
+        let watchId = this.watchIds.pop();
         while (watchId != null) {
             geolocation.clearWatch(watchId);
-            watchId = watchIds.pop();
+            watchId = this.watchIds.pop();
         }
+        BackgroundFetch.stop(
+            () => {
+                console.log("BackgroundFetch successfully stoped");
+            },
+            status => {
+                console.log("BackgroundFetch failed to stoped: ", status);
+            }
+        );
+        this.stopBackgroundTap();
     }
 
     buttonClearTap() {
         this.locations.splice(0, this.locations.length);
     }
-    ngOnInit() {
-        this.showStop = false;
-        this.showPause = false;
-        this.showPlay = true;
-        let self = this;
-        this.route.queryParams.subscribe(params => {
-            self.driversServices = JSON.parse(params["selectedService"]);
-            self.idService = self.driversServices.id;
-            console.log(`Id seleccionado ${self.driversServices.id}`);
-        });
 
-        this.enableLocationTap();
-        this.getListServicesByDriver();
+    get message(): string {
+        return this._message;
+    }
+    set message(value: string) {
+        if (this._message !== value) {
+            this._message = value;
+        }
+    }
+
+    private updateMessage() {
+        this.message = this._counter + " BackgroundFetch events received";
     }
     getListServicesByDriver() {
+        const self = this;
         this.listServices
             .getListServicesByDriverDetail(this.idService)
             .subscribe(
                 result => {
-                    this.driversServices = result;
+                    Object.keys(result).forEach(
+                        key => (self.driversServices[key] = result[key])
+                    );
+                    // self.driversServices =  result;
                     //this.pullRefresh.refreshing = false;
-                    console.log(result);
+
                     this.getListPauseReasons();
                 },
                 error => {
@@ -338,7 +450,6 @@ export class DetailDriverServiceComponent implements OnInit {
             result => {
                 this.listPauseReasons = result;
                 //this.pullRefresh.refreshing = false;
-                console.log(result);
             },
             error => {
                 //this.showMessageDialog(error.err);

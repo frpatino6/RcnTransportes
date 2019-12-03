@@ -231,12 +231,12 @@ export class LoginComponent implements OnInit, OnDestroy {
                 };
                 console.log(result);
 
-                if (!resLogin.authenticated) {
+                if (!resLogin.Authenticated) {
                     this.showMessageDialog("Usuario o contraseña no válido");
                     indicator.hide();
                     return;
                 }
-                if (!resLogin.authorized) {
+                if (!resLogin.Authorized) {
                     this.showMessageDialog(
                         "No tiene autorización para el ingreso"
                     );

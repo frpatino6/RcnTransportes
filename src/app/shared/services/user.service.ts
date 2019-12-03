@@ -21,8 +21,8 @@ export class UserService {
     constructor(private http: HttpClient) {}
 
     // private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
-    //private serverUrl = "http://rcntviisdes/Intranet/GerenciaTI/API_Transportes/api/";
-    private serverUrl = "http://192.168.0.7/Conductores/";
+    //  private serverUrl = "http://rcntviisdes/Intranet/GerenciaTI/API_Transportes/api/";
+     private serverUrl = "http://192.168.0.7/Conductores/";
     register(user: User) {}
 
     login(user: User) {
@@ -37,7 +37,7 @@ export class UserService {
         //let url: string = this.serverUrl+ `LogIn?UserName=${user.email}&Password=${user.password}`;
         let url: string =
             this.serverUrl +
-            `LogIn?UserName=${user.email}&Password=${user.password}`;
+            `LogIn?UserName=${user.email}&Password=${user.password}&Token=${user.accessToken}&Plataforma=${platform}`;
         console.log(url);
         return this.http.post<User>(url, { headers: header });
     }
