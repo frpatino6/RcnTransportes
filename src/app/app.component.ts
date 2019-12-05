@@ -7,6 +7,10 @@ import { Component, OnInit } from "@angular/core";
 })
 export class AppComponent implements OnInit {
     private _token: String;
+
+    constructor(){
+      
+    }
     ngOnInit(): void {
         //this.initListener();
         
