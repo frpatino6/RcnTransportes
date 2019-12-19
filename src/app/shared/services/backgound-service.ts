@@ -2,9 +2,8 @@ import * as geolocation from "nativescript-geolocation";
 import { Accuracy } from "tns-core-modules/ui/enums";
 import * as application from "tns-core-modules/application";
 import { device } from "tns-core-modules/platform";
-import * as Toast from "nativescript-toast";
 import { LocationViewModel } from "~/app/shared/model/location";
-import { DateFormatPipe } from "../pipes/date-format-pipe";
+
 var Sqlite = require("nativescript-sqlite");
 const ad = require("tns-core-modules/utils/utils").ad;
 const _dateFormatPipe = require("../pipes/date-format-pipe");
@@ -69,14 +68,7 @@ function _startWatch() {
                             locationNew.Longitude,
                             locationNew.FechaHora
                         );
-                        let toast = Toast.makeText(
-                            `Background Latitud  Latitud ${
-                                loc.latitude
-                            } longitud ${loc.longitude} altura ${
-                                loc.altitude
-                            } velocidad ${loc.speed > 5 ? 0 : loc.speed}`
-                        );
-                        toast.show();
+
                         console.log(
                             `Background Latitud ${loc.latitude} longitud ${
                                 loc.longitude
@@ -159,7 +151,6 @@ export function getBackgroundServiceClass() {
                     return global.__native(this);
                 }
                 onStartJob(params) {
-                    
                     initDatabase();
                     let that = this;
                     let executed = false;
@@ -178,13 +169,13 @@ export function getBackgroundServiceClass() {
                                             locationNew.Longitude,
                                             locationNew.FechaHora
                                         );
-                                        let toast = Toast.makeText(
-                                            "B " +
-                                                loc.longitude +
-                                                " " +
-                                                loc.latitude
-                                        );
-                                        toast.show();
+                                        // let toast = Toast.makeText(
+                                        //     "B " +
+                                        //         loc.longitude +
+                                        //         " " +
+                                        //         loc.latitude
+                                        // );
+                                        // toast.show();
                                         console.log(
                                             "B " +
                                                 loc.longitude +
@@ -203,9 +194,11 @@ export function getBackgroundServiceClass() {
                                 },
                                 {
                                     desiredAccuracy: Accuracy.high,
-                                    updateDistance: 0.1,
-                                    updateTime: 3000,
-                                    minimumUpdateTime: 100
+                                    updateDistance: 15,
+                                    updateTime: 1000,
+                                    iosAllowsBackgroundLocationUpdates: true,
+                                    iosPausesLocationUpdatesAutomatically: false,
+                                    iosOpenSettingsIfLocationHasBeenDenied: true
                                 }
                             );
                         },

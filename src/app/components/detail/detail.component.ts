@@ -12,7 +12,7 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 import * as application from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
 import * as geolocation from "nativescript-geolocation";
-import * as Toast from "nativescript-toast";
+
 
 var Sqlite = require("nativescript-sqlite");
 var applications = require("application");
@@ -41,6 +41,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
     private _counter: number;
     private _message: string;
     private database: any;
+    private BGids: any = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -69,25 +70,22 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         applications.on(application.suspendEvent, args => {
             const self = this;
             if (args.android) {
-                // For Android applications, args.android is an android activity class.
-                let toast = Toast.makeText("PAT Se ejecuta en SEGUNDO plano");
-                toast.show();
+                // For Android applications, args.android is an android activity class.                            
 
-                if (!self.showPlay) self.startBackgroundTap();
-            } else if (args.ios) {
-                // For iOS applications, args.ios is UIApplication.
-            }
-            if (!self.showPlay) {
+                //     if (!self.showPlay) self.startBackgroundTap();
+                // } else if (args.ios) {
+                //     // For iOS applications, args.ios is UIApplication.
+                // }
+                // if (!self.showPlay) {
+                // }
             }
         });
 
         // App was reopened...
         applications.on(application.resumeEvent, args => {
             if (args.android) {
-                // For Android applications, args.android is an android activity class.
-                let toast = Toast.makeText("PAT Se ejecuta en PRIMER plano");
-                toast.show();
-                this.stopBackgroundTap();
+                // For Android applications, args.android is an android activity class.                                
+                // this.stopBackgroundTap();
             } else if (args.ios) {
                 // For iOS applications, args.ios is UIApplication.
             }
@@ -426,35 +424,25 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
             let context = utils.ad.getApplicationContext();
             const jobScheduler = context.getSystemService(
                 (<any>android.content.Context).JOB_SCHEDULER_SERVICE
-            );
-            if (jobScheduler.getPendingJob(jobId) !== null) {
-                jobScheduler.cancel(jobId);
-            }
+            );           
+            
+            jobScheduler.cancel(jobId);
         }
     }
     startBackgroundTap() {
         if (application.android) {
-            let context = utils.ad.getApplicationContext();
-            if (device.sdkVersion >= "26") {
-                const jobScheduler = context.getSystemService(
-                    (<any>android.content.Context).JOB_SCHEDULER_SERVICE
-                );
-                const component = new android.content.ComponentName(
-                    context,
-                    BackgroundServiceClass.class
-                );
-                const builder = new (<any>android.app).job.JobInfo.Builder(
-                    jobId,
-                    component
-                );
-                builder.setOverrideDeadline(0);
-                jobScheduler.schedule(builder.build());
-            } else {
-                let intent = new android.content.Intent(
-                    context,
-                    BackgroundServiceClass.class
-                );
-                context.startService(intent);
+            if (application.android) {
+                let context = utils.ad.getApplicationContext();
+                if (device.sdkVersion >= "26") {
+                    const jobScheduler = context.getSystemService((<any>android.content.Context).JOB_SCHEDULER_SERVICE);
+                    const component = new android.content.ComponentName(context, BackgroundServiceClass.class);
+                    const builder = new (<any>android.app).job.JobInfo.Builder(jobId, component);
+                    builder.setOverrideDeadline(0);
+                    jobScheduler.schedule(builder.build());
+                } else {
+                    let intent = new android.content.Intent(context, BackgroundServiceClass.class);
+                    context.startService(intent);
+                }
             }
         }
     }
@@ -464,10 +452,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                 this._stopBackgroundJob();
             } else {
                 let context = utils.ad.getApplicationContext();
-                let intent = new android.content.Intent(
-                    context,
-                    BackgroundServiceClass.class
-                );
+                let intent = new android.content.Intent(context, BackgroundServiceClass.class);
                 context.stopService(intent);
             }
         }
@@ -492,6 +477,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
     }
     buttonStartTap() {
         try {
+            this.startBackgroundTap();
             const self = this;
             self.updateService(1); //status started = 1
             self.watchIds.push(
@@ -565,7 +551,6 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         }
         BackgroundFetch.stop(
             () => {
-                this.startBackgroundTap();
                 console.log("BackgroundFetch successfully stoped");
             },
             status => {
