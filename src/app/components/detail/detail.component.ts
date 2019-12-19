@@ -1,19 +1,18 @@
 import { Component, OnInit, NgZone, AfterViewInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Shedule } from "../../shared/model/shedule";
-import * as dialogs from "tns-core-modules/ui/dialogs";
-import * as application from "tns-core-modules/application";
 import { Accuracy } from "tns-core-modules/ui/enums"; // used to describe at what accuracy the location should be get
-import * as utils from "tns-core-modules/utils/utils";
 import { device } from "tns-core-modules/platform/platform";
-import * as geolocation from "nativescript-geolocation";
 import { BackgroundServiceClass } from "~/app/shared/services/backgound-service";
 import { DetailDriverServiceService } from "~/app/shared/services/detail-driver-service.service";
-import * as Toast from "nativescript-toast";
 import { BackgroundFetch } from "nativescript-background-fetch";
 import { LocationViewModel } from "~/app/shared/model/location";
-import { Location } from "@angular/common";
 import { DateFormatPipe } from "~/app/shared/pipes/date-format-pipe";
+import * as dialogs from "tns-core-modules/ui/dialogs";
+import * as application from "tns-core-modules/application";
+import * as utils from "tns-core-modules/utils/utils";
+import * as geolocation from "nativescript-geolocation";
+import * as Toast from "nativescript-toast";
 
 var Sqlite = require("nativescript-sqlite");
 var applications = require("application");
@@ -182,7 +181,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                             this.locations = [];
                         },
                         error => {
-                            console.error("error...");
+                            console.error(`error... fetch ${error}`);
                         }
                     );
             },
@@ -205,6 +204,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                         this.showPause = true;
                         this.showPlay = false;
                         this.showStop = true;
+                        this.buttonStartTap();
                     }
                     if (this.statusService == 2) {
                         //paused
@@ -397,6 +397,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                     self.showPause = false;
                     self.showPlay = true;
                     self.updateService(2); //status paused = 2
+                    self.statusService = 2;
                     self.stopBackgroundTap();
                 }
             });
@@ -435,27 +436,23 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         if (application.android) {
             let context = utils.ad.getApplicationContext();
             if (device.sdkVersion >= "26") {
-                const component = new android.content.ComponentName(
-                    context,
-                    com.nativescript.location.BackgroundService26.class
-                );
-                const builder = new (<any>android.app).job.JobInfo.Builder(
-                    1,
-                    component
-                );
-                builder.setRequiredNetworkType(
-                    (<any>android.app).job.JobInfo.NETWORK_TYPE_ANY
-                );
-                builder.setPeriodic(1 * 60 * 1000);
                 const jobScheduler = context.getSystemService(
                     (<any>android.content.Context).JOB_SCHEDULER_SERVICE
                 );
-                const service = jobScheduler.schedule(builder.build());
-                this.backgroundIds.push(service);
+                const component = new android.content.ComponentName(
+                    context,
+                    BackgroundServiceClass.class
+                );
+                const builder = new (<any>android.app).job.JobInfo.Builder(
+                    jobId,
+                    component
+                );
+                builder.setOverrideDeadline(0);
+                jobScheduler.schedule(builder.build());
             } else {
                 let intent = new android.content.Intent(
                     context,
-                    com.nativescript.location.BackgroundService.class
+                    BackgroundServiceClass.class
                 );
                 context.startService(intent);
             }
@@ -512,7 +509,23 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                                 locationNew.Latitude,
                                 locationNew.Longitude,
                                 locationNew.FechaHora
-                            );                           
+                            );
+                            //self.fetchServicesStatus();
+                            const that = self;
+                            if (loc.speed > 5 && that.statusService == 2) {
+                                //SI LA VELOCIDAD ES MAYOR A 5 KMS/H REINICIA EL SERVICIOS
+                                // self.buttonStartTap();
+                                that.statusService = 1;
+                                that.showPause = true;
+                                that.showPlay = false;
+                                that.showStop = true;
+                            }
+                            // console.log(
+                            //     "F " +
+                            //         loc.longitude +
+                            //         "," +
+                            //         loc.latitude
+                            // );
                             // console.log(
                             //     `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
                             // );
@@ -526,8 +539,8 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                     function(e) {},
                     {
                         desiredAccuracy: Accuracy.high,
-                        updateDistance: 0,
-                        updateTime: 100,
+                        updateDistance: 15,
+                        updateTime: 1000,
                         iosAllowsBackgroundLocationUpdates: true,
                         iosPausesLocationUpdatesAutomatically: false,
                         iosOpenSettingsIfLocationHasBeenDenied: true
@@ -552,6 +565,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         }
         BackgroundFetch.stop(
             () => {
+                this.startBackgroundTap();
                 console.log("BackgroundFetch successfully stoped");
             },
             status => {
@@ -592,7 +606,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                     this.getListPauseReasons();
                 },
                 error => {
-                    console.error("error...");
+                    console.error("error... getListServicesByDriver...");
                 }
             );
     }

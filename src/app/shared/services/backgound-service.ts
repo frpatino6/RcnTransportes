@@ -45,7 +45,7 @@ function insert(lat, lon, time) {
         )
         .then(
             id => {
-                console.log("INSERT RESULT", lat);
+                //console.log("INSERT RESULT", lat);
             },
             error => {
                 console.log("INSERT ERROR", error);
@@ -168,18 +168,28 @@ export function getBackgroundServiceClass() {
                             watchId = geolocation.watchLocation(
                                 function(loc) {
                                     if (loc) {
+                                        let locationNew: LocationViewModel = new LocationViewModel();
+                                        // let displayDate = _dateFormatPipe.transform(new Date()); //formatting current ///date here
+                                        locationNew.Latitude = loc.latitude;
+                                        locationNew.Longitude = loc.longitude;
+                                        locationNew.FechaHora = "";
+                                        insert(
+                                            locationNew.Latitude,
+                                            locationNew.Longitude,
+                                            locationNew.FechaHora
+                                        );
                                         let toast = Toast.makeText(
-                                            "Background Location: " +
-                                                loc.latitude +
+                                            "B " +
+                                                loc.longitude +
                                                 " " +
-                                                loc.longitude
+                                                loc.latitude
                                         );
                                         toast.show();
                                         console.log(
-                                            "Background Location: " +
-                                                loc.latitude +
-                                                " " +
-                                                loc.longitude
+                                            "B " +
+                                                loc.longitude +
+                                                "," +
+                                                loc.latitude
                                         );
                                     }
                                     executed = true;

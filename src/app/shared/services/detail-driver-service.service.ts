@@ -28,9 +28,9 @@ export class DetailDriverServiceService {
 
     public dataDrivers: Shedule[] = new Array();
     // private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
-    // private serverUrl =
-    //     "http://rcntviisdes/Intranet/GerenciaTI/API_Transportes/api/";
-    private serverUrl = "http://192.168.0.7/Conductores/";
+    private serverUrl =
+        "http://portalterceros.rcntv.com.co/API_Transportes/api/";
+    // private serverUrl = "http://192.168.0.7/Conductores/";
 
     public getListServicesByDriverDetail(id: Number): Observable<Shedule> {
         let url: string = this.serverUrl + `ScheduleByDriverDet/${id}`;
