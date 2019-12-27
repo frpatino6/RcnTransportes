@@ -19,7 +19,7 @@ module.exports = env => {
     // Add your custom Activities, Services and other Android app components here.
     const appComponents = [
         "tns-core-modules/ui/frame",
-        "tns-core-modules/ui/frame/activity",
+        "tns-core-modules/ui/frame/activity"
     ];
 
     const platform = env && (env.android && "android" || env.ios && "ios");
@@ -37,19 +37,19 @@ module.exports = env => {
         // The 'appPath' and 'appResourcesPath' values are fetched from
         // the nsconfig.json configuration file.
         appPath = "src",
-        appResourcesPath = "App_Resources",
+            appResourcesPath = "App_Resources",
 
-        // You can provide the following flags when running 'tns run android|ios'
-        aot, // --env.aot
-        snapshot, // --env.snapshot,
-        production, // --env.production
-        uglify, // --env.uglify
-        report, // --env.report
-        sourceMap, // --env.sourceMap
-        hiddenSourceMap, // --env.hiddenSourceMap
-        hmr, // --env.hmr,
-        unitTesting, // --env.unitTesting
-        verbose, // --env.verbose
+            // You can provide the following flags when running 'tns run android|ios'
+            aot, // --env.aot
+            snapshot, // --env.snapshot,
+            production, // --env.production
+            uglify, // --env.uglify
+            report, // --env.report
+            sourceMap, // --env.sourceMap
+            hiddenSourceMap, // --env.hiddenSourceMap
+            hmr, // --env.hmr,
+            unitTesting, // --env.unitTesting
+            verbose, // --env.verbose
     } = env;
 
     const isAnySourceMapEnabled = !!sourceMap || !!hiddenSourceMap;
@@ -194,8 +194,7 @@ module.exports = env => {
             ],
         },
         module: {
-            rules: [
-                {
+            rules: [{
                     include: join(appFullPath, entryPath),
                     use: [
                         // Require all Android app components

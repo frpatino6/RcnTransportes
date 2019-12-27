@@ -1,0 +1,67 @@
+.page {
+    align-items: center;
+    flex-direction: column;
+}
+
+.form {
+    margin-left: 30;
+    margin-right: 30;
+    flex-grow: 2;
+}
+
+.logo {
+    margin-top: 40;
+    margin-bottom: 10;
+    height: 90;
+    font-weight: bold;
+}
+
+.header {
+    font-size: 25;
+    font-weight: 600;
+    margin-bottom: 70;
+    text-align: center;
+    color: #D51A1A;
+}
+
+.input-field {
+    margin-bottom: 25;
+}
+
+.input {
+    font-size: 18;
+}
+
+.input:disabled {
+    background-color: white;
+    opacity: 0.5;
+}
+
+.btn-primary {
+    margin: 30 5 15 5;
+}
+
+.sign-up-label {
+    margin-bottom: 20;
+}
+
+.bold {
+    color: #000000;
+}
+
+.lable-title-app {
+    margin-bottom: 70;
+    font-size: 20;
+    font-weight: bold;
+    font-family: 'Varela'
+}
+
+mdctextfield {
+    ripple-color: blue;
+    elevation: 4;
+}
+
+mdbutton {
+    ripple-color: blue;
+    elevation: 4;
+}

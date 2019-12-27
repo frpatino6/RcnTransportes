@@ -9,35 +9,68 @@ In many cases you may want to use the NativeScript core theme instead
 of writing your own CSS rules. For a full list of class names in the theme
 refer to http://docs.nativescript.org/ui/theme.
 */
-@import '~nativescript-theme-core/css/core.light.css';
 
+@import '~nativescript-theme-core/css/core.light.css';
 
 /*
 For example, the following CSS rule changes the font size of all UI
 components that have the btn class name.
 */
+
 .btn {
     font-size: 18;
 }
-.action-button-solpe {
+
+.btn_ok {
+    background-color: #1ab394;
+}
+
+.btn_cancel {
+    background-color: #ec4758;
+}
+
+.btn_pausa {
+    background-color: #f8ac59;
+}
+
+.far {
+    font-family: Font Awesome 5 Free, fa-regular-400;
+    font-weight: 400;
+}
+
+.fab {
+    font-family: Font Awesome 5 Brands, fa-brands-400;
+    font-weight: 400;
+}
+
+.fas {
+    font-family: Font Awesome 5 Free, fa-solid-900;
+    font-weight: 900;
+}
+
+.action-button-pat {
     background-color: #23c6c8;
     border-radius: 8;
     color: white;
     font-family: FontAwesome;
-    font-size: 15;   
+    font-size: 20;
     vertical-align: middle;
     width: 60%;
-  }
-
+}
 
 .action-bar {
     height: 50;
     background-color: #1ab394;
     color: White;
     font-family: FontAwesome;
-    font-size: 20;   
+    font-size: 20;
 }
 
+.action-bar-title-text {
+    font-family: FontAwesome;
+    font-style: italic;
+    font-size: 30;
+}
 
 .sidedrawer-list-item-text {
     color: #fff
@@ -49,7 +82,7 @@ html {
 
 .profile-container {
     background-color: #1ab394;
-    padding: 20 20 20 0;
+    padding: 10 0 10 0;
 }
 
 .profile-photo-container {
@@ -135,7 +168,6 @@ html {
 
 .owe-list-item {
     background-color: #fff;
-   
 }
 
 .owe-main-info {
@@ -193,11 +225,13 @@ html {
     margin-top: 5;
     font-size: 20;
 }
-.date-information{
+
+.date-information {
     color: #ec4758;
     margin-top: 5;
     font-size: 18;
 }
+
 .debtor-list {
     margin-left: 5;
     margin-right: 10;
@@ -332,7 +366,7 @@ html {
     text-decoration: line-through;
 }
 
-.default-button {    
+.default-button {
     background-color: #8f91de;
     color: #fff;
     padding: 14 10;
@@ -413,7 +447,7 @@ html {
 
 .suggestion-item {
     border-width: 1;
-    border-color: #b8b8b8; 
+    border-color: #b8b8b8;
     padding: 10;
 }
 
@@ -438,4 +472,38 @@ html {
     border-width: 1;
     border-color: #bf97df;
     margin-bottom: -1;
+}
+
+.service_name {
+    margin-left: 5;
+    font-size: 18;
+    color: black;
+}
+
+.label_name {
+    margin-left: 5;
+    font-size: 19;
+}
+
+.service_observations {
+    margin: 1 8 2 8;
+    font-size: 16;
+    color: #ffffff;
+    text-align: center;
+}
+
+.service-information-container {
+    height: 110;
+}
+
+footer {
+    color: white;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+.layoutListDrivers {
+    padding-top: 15px;
 }

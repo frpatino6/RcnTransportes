@@ -4,7 +4,7 @@ import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { LoginComponent } from "./login/login.component";
+import { LoginComponent } from "./components/login/login.component";
 import { UserService } from "./shared/services/user.service";
 
 @NgModule({
@@ -19,8 +19,7 @@ import { UserService } from "./shared/services/user.service";
     ],
     declarations: [
         AppComponent,
-        LoginComponent,
-        
+        LoginComponent               
     ],
     providers: [
         UserService
