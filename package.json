@@ -5,7 +5,7 @@
             "version": "6.1.1"
         },
         "tns-ios": {
-            "version": "6.1.0"
+            "version": "6.3.0"
         }
     },
     "description": "NativeScript Application",
@@ -29,7 +29,6 @@
         "nativescript-background-gps": "0.0.2",
         "nativescript-bottom-navigation": "^1.5.0",
         "nativescript-cardview": "^3.1.1",
-        "nativescript-dialog": "^0.1.0",
         "nativescript-drop-down": "^5.0.4",
         "nativescript-floatingactionbutton": "^5.0.3",
         "nativescript-fonticon": "^2.0.0",
