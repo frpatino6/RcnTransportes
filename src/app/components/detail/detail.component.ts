@@ -67,29 +67,29 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         this.getListServicesByDriver();
         this.getListPauseReasons();
 
-        applications.on(application.suspendEvent, args => {
-            const self = this;
-            if (args.android) {
-                // For Android applications, args.android is an android activity class.                            
+        // applications.on(application.suspendEvent, args => {
+        //     const self = this;
+        //     if (args.android) {
+        //         // For Android applications, args.android is an android activity class.                            
 
-                //     if (!self.showPlay) self.startBackgroundTap();
-                // } else if (args.ios) {
-                //     // For iOS applications, args.ios is UIApplication.
-                // }
-                // if (!self.showPlay) {
-                // }
-            }
-        });
+        //         //     if (!self.showPlay) self.startBackgroundTap();
+        //         // } else if (args.ios) {
+        //         //     // For iOS applications, args.ios is UIApplication.
+        //         // }
+        //         // if (!self.showPlay) {
+        //         // }
+        //     }
+        // });
 
-        // App was reopened...
-        applications.on(application.resumeEvent, args => {
-            if (args.android) {
-                // For Android applications, args.android is an android activity class.                                
-                // this.stopBackgroundTap();
-            } else if (args.ios) {
-                // For iOS applications, args.ios is UIApplication.
-            }
-        });
+        // // App was reopened...
+        // applications.on(application.resumeEvent, args => {
+        //     if (args.android) {
+        //         // For Android applications, args.android is an android activity class.                                
+        //         // this.stopBackgroundTap();
+        //     } else if (args.ios) {
+        //         // For iOS applications, args.ios is UIApplication.
+        //     }
+        // });
         this.initDatabase();
         this.initListener();
         this.asyncLocalization();

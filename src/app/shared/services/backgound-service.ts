@@ -194,7 +194,7 @@ export function getBackgroundServiceClass() {
                                 },
                                 {
                                     desiredAccuracy: Accuracy.high,
-                                    updateDistance: 0.1,
+                                    updateDistance: 0.01,
                                     updateTime: 1000,
                                     iosAllowsBackgroundLocationUpdates: true,
                                     iosPausesLocationUpdatesAutomatically: false,
