@@ -215,7 +215,7 @@ export function getBackgroundServiceClass() {
                     console.log("service onStopJob");
                     this.jobFinished(jobParameters, false);
                     _clearWatch();
-                    return false;
+                    return true;
                 }
             }
             return BackgroundService26;

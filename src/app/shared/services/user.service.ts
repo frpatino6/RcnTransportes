@@ -55,11 +55,7 @@ export class UserService {
         // set headers here e.g.
         let headers = new HttpHeaders({
             "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, PUT, POST",
-            "X-TFS-FedAuthRedirect": "Suppress",
-            SolpePassword: password
+         
         });
 
         return headers;
