@@ -10,9 +10,9 @@ export class ListServicesByDriver {
 
     public dataDrivers: Shedule[] = new Array();
     // private serverUrl = "https://solpe.rcntv.com.co/login/ValidateUser/";
-     private serverUrl =
+     //private serverUrl =
          "http://portalterceros.rcntv.com.co/API_Transportes/api/";
-    //private serverUrl = "http://192.168.0.7/Conductores/";
+    private serverUrl = "http://192.168.100.14/Conductores/";
 
     public getListServicesByDriver(docNumber: String): Observable<SheduleUpperCase[]> {
         
