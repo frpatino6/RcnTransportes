@@ -81,10 +81,11 @@ export class ListServicesDriverComponent implements OnInit {
             });
     }
     onClickDetail(selectedService) {
-       // console.log(`id servicio ${JSON.stringify(selectedService.id)}`);
+       console.log(`tap`);
         let navigationExtras = {
             queryParams: { selectedService: JSON.stringify(selectedService) }
         };
         this.routerExtensions.navigate(["/detailServices"], navigationExtras);
+        console.log('tap al final')
     }
 }
