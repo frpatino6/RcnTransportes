@@ -481,71 +481,73 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
     }
     buttonStartTap() {
         try {
-            this.startBackgroundTap();
-            // const self = this;
-            // self.updateService(1); //status started = 1
-            // self.watchIds.push(
-            //     geolocation.watchLocation(
-            //         function(loc) {
-            //             if (loc) {
-            //                 let locationNew: LocationViewModel = new LocationViewModel();
-            //                 let displayDate = self._dateFormatPipe.transform(
-            //                     new Date()
-            //                 ); //formatting current ///date here
-            //                 locationNew.Latitude = loc.latitude;
-            //                 locationNew.Longitude = loc.longitude;
-            //                 locationNew.FechaHora = displayDate;
-            //                 self.insert(
-            //                     locationNew.Latitude,
-            //                     locationNew.Longitude,
-            //                     locationNew.FechaHora
-            //                 );
-            //                 //self.fetchServicesStatus();
-            //                 const that = self;
-            //                 if (loc.speed > 5 && that.statusService == 2) {
-            //                     //SI LA VELOCIDAD ES MAYOR A 5 KMS/H REINICIA EL SERVICIOS
-            //                     // self.buttonStartTap();
-            //                     that.statusService = 1;
-            //                     that.showPause = true;
-            //                     that.showPlay = false;
-            //                     that.showStop = true;
-            //                 }
-            //                 // console.log(
-            //                 //     "F " +
-            //                 //         loc.longitude +
-            //                 //         "," +
-            //                 //         loc.latitude
-            //                 // );
-            //                 // console.log(
-            //                 //     `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
-            //                 // );
-            //                 /* let toast = Toast.makeText(
-            //                     `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
-            //                 );
-            //                 toast.show();*/
-            //                 //self.insert(loc.latitude, loc.longitude, "");
-            //             }
-            //         },
-            //         function(e) {},
-            //         {
-            //             desiredAccuracy: Accuracy.high,
-            //             updateDistance: 15,
-            //             updateTime: 1000,
-            //             iosAllowsBackgroundLocationUpdates: true,
-            //             iosPausesLocationUpdatesAutomatically: false,
-            //             iosOpenSettingsIfLocationHasBeenDenied: true
-            //         }
-            //     )
-            // // );
-            // BackgroundFetch.start(
-            //     () => {
-            //         console.log("BackgroundFetch successfully started");
-            //     },
-            //     status => {
-            //         console.log("BackgroundFetch failed to start: ", status);
-            //     }
-            // );
-        } catch (ex) {}
+            //this.startBackgroundTap();
+            const self = this;
+            self.updateService(1); //status started = 1
+            self.watchIds.push(
+                geolocation.watchLocation(
+                    function(loc) {
+                        if (loc) {
+                            let locationNew: LocationViewModel = new LocationViewModel();
+                            let displayDate = self._dateFormatPipe.transform(
+                                new Date()
+                            ); //formatting current ///date here
+                            locationNew.Latitude = loc.latitude;
+                            locationNew.Longitude = loc.longitude;
+                            locationNew.FechaHora = displayDate;
+                            self.insert(
+                                locationNew.Latitude,
+                                locationNew.Longitude,
+                                locationNew.FechaHora
+                            );
+                            //self.fetchServicesStatus();
+                            const that = self;
+                            if (loc.speed > 5 && that.statusService == 2) {
+                                //SI LA VELOCIDAD ES MAYOR A 5 KMS/H REINICIA EL SERVICIOS
+                                // self.buttonStartTap();
+                                that.statusService = 1;
+                                that.showPause = true;
+                                that.showPlay = false;
+                                that.showStop = true;
+                            }
+                            console.log(
+                                "F " +
+                                    loc.longitude +
+                                    "," +
+                                    loc.latitude
+                            );
+                            console.log(
+                                `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
+                            );
+                            /* let toast = Toast.makeText(
+                                `FOREGROUND Latitud ${loc.latitude} longitud ${loc.longitude} altura ${loc.altitude} velocidad ${loc.speed}`
+                            );
+                            toast.show();*/
+                            self.insert(loc.latitude, loc.longitude, "");
+                        }
+                    },
+                    function(e) {},
+                    {
+                        desiredAccuracy: Accuracy.high,
+                        updateDistance: 0.1,
+                        updateTime: 1000,
+                        iosAllowsBackgroundLocationUpdates: true,
+                        iosPausesLocationUpdatesAutomatically: false,
+                        iosOpenSettingsIfLocationHasBeenDenied: true
+                    }
+                )
+             );
+            BackgroundFetch.start(
+                () => {
+                    console.log("BackgroundFetch successfully started");
+                },
+                status => {
+                    console.log("BackgroundFetch failed to start: ", status);
+                }
+            );
+        } catch (ex) {
+            console.log(ex.err)
+        }
     }
     buttonStopTap() {
         let watchId = this.watchIds.pop();
