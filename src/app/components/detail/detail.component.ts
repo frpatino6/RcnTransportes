@@ -49,7 +49,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         private listServices: DetailDriverServiceService
     ) {
         application.on(application.exitEvent, this._stopBackgroundJob);
-        let context = application.android.context;
+        // let context = application.android.context;
         const self = this;
         // App went to background...
     }
@@ -67,29 +67,29 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
         this.getListServicesByDriver();
         this.getListPauseReasons();
 
-        applications.on(application.suspendEvent, args => {
-            const self = this;
-            if (args.android) {
-                // For Android applications, args.android is an android activity class.                            
+        // applications.on(application.suspendEvent, args => {
+        //     const self = this;
+        //     if (args.android) {
+        //         // For Android applications, args.android is an android activity class.                            
 
-                //     if (!self.showPlay) self.startBackgroundTap();
-                // } else if (args.ios) {
-                //     // For iOS applications, args.ios is UIApplication.
-                // }
-                // if (!self.showPlay) {
-                // }
-            }
-        });
+        //         //     if (!self.showPlay) self.startBackgroundTap();
+        //         // } else if (args.ios) {
+        //         //     // For iOS applications, args.ios is UIApplication.
+        //         // }
+        //         // if (!self.showPlay) {
+        //         // }
+        //     }
+        // });
 
-        // App was reopened...
-        applications.on(application.resumeEvent, args => {
-            if (args.android) {
-                // For Android applications, args.android is an android activity class.                                
-                // this.stopBackgroundTap();
-            } else if (args.ios) {
-                // For iOS applications, args.ios is UIApplication.
-            }
-        });
+        // // App was reopened...
+        // applications.on(application.resumeEvent, args => {
+        //     if (args.android) {
+        //         // For Android applications, args.android is an android activity class.                                
+        //         // this.stopBackgroundTap();
+        //     } else if (args.ios) {
+        //         // For iOS applications, args.ios is UIApplication.
+        //     }
+        // });
         this.initDatabase();
         this.initListener();
         this.asyncLocalization();
@@ -243,6 +243,9 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
     }
     public enableLocationTap() {
         console.log("enableLocationTap");
+        if (geolocation === undefined) {
+            console.log('Geolocation Undefined')
+        }
         geolocation.isEnabled().then(
             function(isEnabled) {
                 if (!isEnabled) {
@@ -253,12 +256,14 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                                 console.log("User Enabled Location Service");
                             },
                             e => {
-                                console.log("Error: " + (e.message || e));
+                                console.log("Location Services Error: " + (e.message || e));
                             }
                         )
                         .catch(ex => {
                             console.log("Unable to Enable Location", ex);
                         });
+                } else {
+                    console.log('Localization is enabled')
                 }
             },
             function(e) {
@@ -486,8 +491,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
             self.updateService(1); //status started = 1
             self.watchIds.push(
                 geolocation.watchLocation(
-                    function(loc) {
-                        if (loc) {
+                    function(loc) {                        if (loc) {
                             let locationNew: LocationViewModel = new LocationViewModel();
                             let displayDate = self._dateFormatPipe.transform(
                                 new Date()
@@ -530,7 +534,7 @@ export class DetailDriverServiceComponent implements OnInit, AfterViewInit {
                     {
                         desiredAccuracy: Accuracy.high,
                         updateDistance: 0.1,
-                        updateTime: 1000,
+                        updateTime: 100,
                         iosAllowsBackgroundLocationUpdates: true,
                         iosPausesLocationUpdatesAutomatically: false,
                         iosOpenSettingsIfLocationHasBeenDenied: true
